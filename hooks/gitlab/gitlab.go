@@ -14,7 +14,7 @@ var (
 	Messages chan string
 )
 
-func GitLabHook(ctx *web.Context ) {
+func GitLabHook(ctx *web.Context) {
 	b, err := ioutil.ReadAll(ctx.Request.Body)
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -49,7 +49,6 @@ func GitLabHook(ctx *web.Context ) {
 		commitToken = "commit"
 	}
 	ircmsg := fmt.Sprintf("[%s] %s pushed %s new %s to %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(user, "teal"), irctools.Bold(strconv.Itoa(commitCount)), commitToken, irctools.Colored(ref, "purple"), url)
-	//	irccat.PostToIrc(irccataddr, ircmsg)
 	Messages <- ircmsg
 
 	for _, c := range commitData {
@@ -61,7 +60,6 @@ func GitLabHook(ctx *web.Context ) {
 
 		message := commit["message"].(string)
 		ircmsg = fmt.Sprintf("%s/%s %s %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(ref, "purple"), irctools.Colored(commitId[:8], "grey"), irctools.Colored(user, "teal"), message)
-		//		irccat.PostToIrc(irccataddr, ircmsg)
 		Messages <- ircmsg
 	}
 }

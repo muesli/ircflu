@@ -6,8 +6,9 @@ import (
 	"log"
 	irc "github.com/fluffle/goirc/client"
 	"github.com/hoisie/web"
-	"ircflu/hooks/gitlab"
 	"ircflu/catserver"
+	"ircflu/hooks/github"
+	"ircflu/hooks/gitlab"
 	"strings"
 	"time"
 )
@@ -158,6 +159,7 @@ func main() {
 		}
 	}()
 
+	web.Post("/github", github.GitHubHook)
 	web.Post("/gitlab", gitlab.GitLabHook)
 	web.Run("0.0.0.0:12346")
 }
