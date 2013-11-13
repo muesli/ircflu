@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/hoisie/web"
-	"io/ioutil"
 	"ircflu/irctools"
 	"strconv"
 	"strings"
@@ -15,16 +14,17 @@ var (
 )
 
 func GitHubHook(ctx *web.Context) {
-	b, err := ioutil.ReadAll(ctx.Request.Body)
-	if err != nil {
-		fmt.Println("Error:", err)
+	payloadString, ok := ctx.Params["payload"]
+	if !ok {
+		fmt.Println("Couldn't find GitHub payload!")
 		return
 	}
 
+	b := []byte(payloadString)
 	fmt.Println("Params:", string(b))
 
 	var payload interface{}
-	err = json.Unmarshal(b, &payload)
+	err := json.Unmarshal(b, &payload)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -42,7 +42,7 @@ func GitHubHook(ctx *web.Context) {
 
 	repoData := data["repository"].(map[string]interface{})
 	repo := repoData["name"].(string)
-	url := repoData["homepage"].(string) + "/compare/" + before[:8] + "..." + after[:8]
+	url := repoData["url"].(string) + "/compare/" + before[:8] + "..." + after[:8]
 
 	commitToken := "commits"
 	if commitCount == 1 {

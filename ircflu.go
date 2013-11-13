@@ -45,6 +45,7 @@ func init() {
 
 	flag.Parse()
 
+	github.Messages = messages
 	gitlab.Messages = messages
 }
 
