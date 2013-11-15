@@ -1,20 +1,48 @@
-// Imported from gocat by Richard Jones - https://github.com/RJ/gocat
+// Based on gocat's catserver by Richard Jones - https://github.com/RJ/gocat
 // Listens on a TCP port, parses first line for addressees,
-// puts CatMsg onto channel.
+// Puts Message onto the out channel.
 package catserver
 
-import "net"
-import "bufio"
-import "log"
-import "io"
-import "strings"
+import (
+	"net"
+	"bufio"
+	"log"
+	"io"
+	"strings"
+	"ircflu/app"
+	"ircflu/msgsystem"
+)
 
-type CatMsg struct {
-    To  []string
-    Msg string
+type CatSubSystem struct {
+	name string
+	messagesIn chan msgsystem.Message
+	messagesOut chan msgsystem.Message
+
+	catbind string
+	catfam  string
 }
 
-func CatportServer(catmsgs chan CatMsg, catfamily string, catbind string) {
+func (h *CatSubSystem) Name() string {
+	return h.name
+}
+
+func (h *CatSubSystem) MessageInChan() chan msgsystem.Message {
+	return h.messagesIn
+}
+
+func (h *CatSubSystem) SetMessageInChan(channel chan msgsystem.Message) {
+	h.messagesIn = channel
+}
+
+func (h *CatSubSystem) MessageOutChan() chan msgsystem.Message {
+	return h.messagesOut
+}
+
+func (h *CatSubSystem) SetMessageOutChan(channel chan msgsystem.Message) {
+	h.messagesOut = channel
+}
+
+func CatportServer(catmsgs chan msgsystem.Message, catfamily string, catbind string) {
     netListen, error := net.Listen(catfamily, catbind)
     if error != nil {
         log.Fatal(error)
@@ -35,7 +63,7 @@ func CatportServer(catmsgs chan CatMsg, catfamily string, catbind string) {
     }
 }
 
-func ClientHandler(connection net.Conn, catmsgs chan CatMsg) {
+func ClientHandler(connection net.Conn, catmsgs chan msgsystem.Message) {
     log.Println(connection.RemoteAddr().String() + " connected.")
     reader := bufio.NewReader(connection)
     seenFirst := false
@@ -60,7 +88,7 @@ func ClientHandler(connection net.Conn, catmsgs chan CatMsg) {
                 line = line2
                 to = newto
             }
-            cm := CatMsg{to, line}
+            cm := msgsystem.Message{to, line}
             catmsgs <- cm
         }
     }
@@ -93,4 +121,20 @@ func ParseFirstLine(str string) ([]string, string) {
         // otherwise considered to be a channel name, leave as-is
     }
     return parts, rest
+}
+
+func (h *CatSubSystem) Run() {
+	// Listen on catport:
+	go CatportServer(h.messagesOut, h.catfam, h.catbind)
+}
+
+func init() {
+	cat := CatSubSystem{name: "cat"}
+
+	app.AddFlags([]app.CliFlag{
+		app.CliFlag{&cat.catbind, "catbind", ":12345", "net.Listen spec, to listen for IRCCat msgs"},
+		app.CliFlag{&cat.catfam, "catfamily", "tcp4", "net.Listen address family for IRCCat msgs"},
+	})
+
+	msgsystem.RegisterSubSystem(&cat)
 }

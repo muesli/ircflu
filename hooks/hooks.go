@@ -5,18 +5,18 @@ import (
 	_ "strings"
 	_ "time"
 	"github.com/hoisie/web"
+	"ircflu/msgsystem"
 )
 
 var (
-	Messages = make(chan string)
 	Hooks []*Hook
 )
 
 type Hook interface {
 	Request(ctx *web.Context)
 
-	MessageChan() chan string
-	SetMessageChan(channel chan string)
+	MessageChan() chan msgsystem.Message
+	SetMessageChan(channel chan msgsystem.Message)
 
 	Name() string
 	Path() string
@@ -29,7 +29,7 @@ func init() {
 func RegisterWebHook(hook Hook) {
 	fmt.Println("Registering web-hook:", hook.Name(), "on", hook.Path())
 
-	hook.SetMessageChan(Messages)
+	hook.SetMessageChan(msgsystem.MessagesOut)
 	Hooks = append(Hooks, &hook)
 
 	web.Post(hook.Path(), hook.Request)

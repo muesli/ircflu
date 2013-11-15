@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"github.com/hoisie/web"
 	"ircflu/hooks"
-	"ircflu/irctools"
+	"ircflu/msgsystem"
+	"ircflu/msgsystem/irc/irctools"
 	"strconv"
 	"strings"
 )
@@ -16,7 +17,7 @@ var (
 type GitHubHook struct {
 	name string
 	path string
-	messages chan string
+	messages chan msgsystem.Message
 }
 
 func init() {
@@ -31,11 +32,11 @@ func (h *GitHubHook) Path() string {
 	return h.path
 }
 
-func (h *GitHubHook) MessageChan() chan string {
+func (h *GitHubHook) MessageChan() chan msgsystem.Message {
 	return h.messages
 }
 
-func (h *GitHubHook) SetMessageChan(channel chan string) {
+func (h *GitHubHook) SetMessageChan(channel chan msgsystem.Message) {
 	h.messages = channel
 }
 
@@ -74,7 +75,7 @@ func (h *GitHubHook) Request(ctx *web.Context) {
 		commitToken = "commit"
 	}
 
-	var ircmsgs []string
+	var ircmsgs []msgsystem.Message
 	for _, c := range commitData {
 		commit := c.(map[string]interface{})
 		commitId := commit["id"].(string)
@@ -89,11 +90,16 @@ func (h *GitHubHook) Request(ctx *web.Context) {
 
 		commitCount++
 		message := commit["message"].(string)
-		msg := fmt.Sprintf("%s/%s %s %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(ref, "purple"), irctools.Colored(commitId[:8], "grey"), irctools.Colored(user, "teal"), message)
+
+		msg := msgsystem.Message{
+			Msg: fmt.Sprintf("%s/%s %s %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(ref, "purple"), irctools.Colored(commitId[:8], "grey"), irctools.Colored(user, "teal"), message),
+		}
 		ircmsgs = append(ircmsgs, msg)
 	}
 
-	msg := fmt.Sprintf("[%s] %s pushed %s new %s to %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(user, "teal"), irctools.Bold(strconv.Itoa(commitCount)), commitToken, irctools.Colored(ref, "purple"), url)
+	msg := msgsystem.Message{
+		Msg: fmt.Sprintf("[%s] %s pushed %s new %s to %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(user, "teal"), irctools.Bold(strconv.Itoa(commitCount)), commitToken, irctools.Colored(ref, "purple"), url),
+	}
 	h.messages <- msg
 
 	for _, m := range ircmsgs {

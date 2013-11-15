@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"github.com/hoisie/web"
 	"ircflu/hooks"
-	"ircflu/irctools"
+	"ircflu/msgsystem"
+	"ircflu/msgsystem/irc/irctools"
 	"io/ioutil"
 	"strconv"
 	"strings"
@@ -17,7 +18,7 @@ var (
 type GitLabHook struct {
 	name string
 	path string
-	messages chan string
+	messages chan msgsystem.Message
 }
 
 func init() {
@@ -32,11 +33,11 @@ func (h *GitLabHook) Path() string {
 	return h.path
 }
 
-func (h *GitLabHook) MessageChan() chan string {
+func (h *GitLabHook) MessageChan() chan msgsystem.Message {
 	return h.messages
 }
 
-func (h *GitLabHook) SetMessageChan(channel chan string) {
+func (h *GitLabHook) SetMessageChan(channel chan msgsystem.Message) {
 	h.messages = channel
 }
 
@@ -74,7 +75,9 @@ func (h *GitLabHook) Request(ctx *web.Context) {
 	if commitCount == 1 {
 		commitToken = "commit"
 	}
-	ircmsg := fmt.Sprintf("[%s] %s pushed %s new %s to %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(user, "teal"), irctools.Bold(strconv.Itoa(commitCount)), commitToken, irctools.Colored(ref, "purple"), url)
+	ircmsg := msgsystem.Message{
+		Msg: fmt.Sprintf("[%s] %s pushed %s new %s to %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(user, "teal"), irctools.Bold(strconv.Itoa(commitCount)), commitToken, irctools.Colored(ref, "purple"), url),
+	}
 	h.messages <- ircmsg
 
 	for _, c := range commitData {
@@ -85,7 +88,9 @@ func (h *GitLabHook) Request(ctx *web.Context) {
 		}
 
 		message := commit["message"].(string)
-		ircmsg = fmt.Sprintf("%s/%s %s %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(ref, "purple"), irctools.Colored(commitId[:8], "grey"), irctools.Colored(user, "teal"), message)
+		ircmsg := msgsystem.Message{
+			Msg: fmt.Sprintf("%s/%s %s %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(ref, "purple"), irctools.Colored(commitId[:8], "grey"), irctools.Colored(user, "teal"), message),
+		}
 		h.messages <- ircmsg
 	}
 }
