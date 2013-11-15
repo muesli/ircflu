@@ -4,16 +4,42 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/hoisie/web"
+	"ircflu/hooks"
 	"ircflu/irctools"
 	"strconv"
 	"strings"
 )
 
 var (
-	Messages chan string
 )
 
-func GitHubHook(ctx *web.Context) {
+type GitHubHook struct {
+	name string
+	path string
+	messages chan string
+}
+
+func init() {
+	hooks.RegisterWebHook(&GitHubHook{name: "GitHub", path: "/github"})
+}
+
+func (h *GitHubHook) Name() string {
+	return h.name
+}
+
+func (h *GitHubHook) Path() string {
+	return h.path
+}
+
+func (h *GitHubHook) MessageChan() chan string {
+	return h.messages
+}
+
+func (h *GitHubHook) SetMessageChan(channel chan string) {
+	h.messages = channel
+}
+
+func (h *GitHubHook) Request(ctx *web.Context) {
 	payloadString, ok := ctx.Params["payload"]
 	if !ok {
 		fmt.Println("Couldn't find GitHub payload!")
@@ -21,7 +47,6 @@ func GitHubHook(ctx *web.Context) {
 	}
 
 	b := []byte(payloadString)
-	fmt.Println("Params:", string(b))
 
 	var payload interface{}
 	err := json.Unmarshal(b, &payload)
@@ -69,9 +94,9 @@ func GitHubHook(ctx *web.Context) {
 	}
 
 	msg := fmt.Sprintf("[%s] %s pushed %s new %s to %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(user, "teal"), irctools.Bold(strconv.Itoa(commitCount)), commitToken, irctools.Colored(ref, "purple"), url)
-	Messages <- msg
+	h.messages <- msg
 
 	for _, m := range ircmsgs {
-		Messages <- m
+		h.messages <- m
 	}
 }

@@ -4,17 +4,43 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/hoisie/web"
-	"io/ioutil"
+	"ircflu/hooks"
 	"ircflu/irctools"
+	"io/ioutil"
 	"strconv"
 	"strings"
 )
 
 var (
-	Messages chan string
 )
 
-func GitLabHook(ctx *web.Context) {
+type GitLabHook struct {
+	name string
+	path string
+	messages chan string
+}
+
+func init() {
+	hooks.RegisterWebHook(&GitLabHook{name: "GitLab", path: "/gitlab"})
+}
+
+func (h *GitLabHook) Name() string {
+	return h.name
+}
+
+func (h *GitLabHook) Path() string {
+	return h.path
+}
+
+func (h *GitLabHook) MessageChan() chan string {
+	return h.messages
+}
+
+func (h *GitLabHook) SetMessageChan(channel chan string) {
+	h.messages = channel
+}
+
+func (h *GitLabHook) Request(ctx *web.Context) {
 	b, err := ioutil.ReadAll(ctx.Request.Body)
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -49,7 +75,7 @@ func GitLabHook(ctx *web.Context) {
 		commitToken = "commit"
 	}
 	ircmsg := fmt.Sprintf("[%s] %s pushed %s new %s to %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(user, "teal"), irctools.Bold(strconv.Itoa(commitCount)), commitToken, irctools.Colored(ref, "purple"), url)
-	Messages <- ircmsg
+	h.messages <- ircmsg
 
 	for _, c := range commitData {
 		commit := c.(map[string]interface{})
@@ -60,6 +86,6 @@ func GitLabHook(ctx *web.Context) {
 
 		message := commit["message"].(string)
 		ircmsg = fmt.Sprintf("%s/%s %s %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(ref, "purple"), irctools.Colored(commitId[:8], "grey"), irctools.Colored(user, "teal"), message)
-		Messages <- ircmsg
+		h.messages <- ircmsg
 	}
 }

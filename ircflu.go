@@ -7,16 +7,14 @@ import (
 	irc "github.com/fluffle/goirc/client"
 	"github.com/hoisie/web"
 	"ircflu/catserver"
-	"ircflu/hooks/github"
-	"ircflu/hooks/gitlab"
+	"ircflu/hooks"
+	_ "ircflu/hooks/github"
+	_ "ircflu/hooks/gitlab"
 	"strings"
 	"time"
 )
 
 var (
-	// to read parser output:
-	messages = make(chan string)
-
 	irchost     string
 	ircnick     string
 	ircpassword string
@@ -44,9 +42,6 @@ func init() {
 		"net.Listen address family for IRCCat msgs")
 
 	flag.Parse()
-
-	github.Messages = messages
-	gitlab.Messages = messages
 }
 
 func CatMsgSender(ch chan catserver.CatMsg, client *irc.Conn) {
@@ -113,7 +108,6 @@ func decodeParam(param string) string {
 	return strings.Replace(param, "+", " ", -1)
 }
 
-
 func main() {
 	// msgs from tcp catport to this channel
 	catmsgs := make(chan catserver.CatMsg)
@@ -155,12 +149,10 @@ func main() {
 
 	go func() {
 		for {
-			m := <-messages
+			m := <-hooks.Messages
 			c.Privmsg(ircchannel, m)
 		}
 	}()
 
-	web.Post("/github", github.GitHubHook)
-	web.Post("/gitlab", gitlab.GitLabHook)
 	web.Run("0.0.0.0:12346")
 }
