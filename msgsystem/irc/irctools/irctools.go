@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func PostToIrc(host string, val string) {
+func PostToIrcFlu(host string, val string) {
         addr, err := net.ResolveTCPAddr("tcp", host)
         if err != nil {
                 fmt.Println("Error:", err)
