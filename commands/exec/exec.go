@@ -52,7 +52,7 @@ func (h *ExecCommand) Parse(msg msgsystem.Message) bool {
 			}
 
 			if strings.HasPrefix(channel[0], "#muesli") {
-				fmt.Println("Deploying:", params)
+				fmt.Println("Executing:", params)
 
 				c := strings.Split(params, " ")
 				e := exec.Command(c[0], c[1:]...)
