@@ -7,6 +7,7 @@ import (
 	"ircflu/auth"
 	"ircflu/commands"
 	"ircflu/msgsystem"
+	"ircflu/msgsystem/irc/irctools"
 )
 
 type AliasCommand struct {
@@ -54,7 +55,6 @@ func (h *AliasCommand) Parse(msg msgsystem.Message) bool {
 			}
 
 			a := strings.Split(params, "=")
-
 			if len(a) == 2 {
 				a[0] = strings.TrimSpace(a[0])
 				a[1] = strings.TrimSpace(a[1])
@@ -70,6 +70,11 @@ func (h *AliasCommand) Parse(msg msgsystem.Message) bool {
 					Msg: "Usage: !alias [new command] = [actual command]",
 				}
 				h.messagesOut <- r
+
+				for k, v := range h.aliases {
+					r.Msg = "Alias: " + irctools.Colored(k, "red") + " = " + irctools.Colored(v, "teal")
+					h.messagesOut <- r
+				}
 			}
 
 			return true

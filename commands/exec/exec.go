@@ -8,6 +8,7 @@ import (
 	"ircflu/auth"
 	"ircflu/commands"
 	"ircflu/msgsystem"
+	"ircflu/msgsystem/irc/irctools"
 )
 
 type ExecCommand struct {
@@ -55,7 +56,7 @@ func (h *ExecCommand) Parse(msg msgsystem.Message) bool {
 			if len(params) > 0 {
 				r := msgsystem.Message{
 					To: channel,
-					Msg: "Executing command!",
+					Msg: irctools.Colored("Executing command!", "red"),
 				}
 				h.messagesOut <- r
 
