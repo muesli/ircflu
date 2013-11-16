@@ -85,6 +85,7 @@ func (h *AliasCommand) Parse(msg msgsystem.Message) bool {
 				r := msgsystem.Message{
 					To: channel,
 					Source: msg.Source,
+					Authed: msg.Authed,
 					Msg: "!" + v,
 				}
 				h.messagesIn <- r
