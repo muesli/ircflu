@@ -1,7 +1,30 @@
 package irctools
 
 import (
+	"net"
+	"fmt"
 )
+
+func PostToIrc(host string, val string) {
+        addr, err := net.ResolveTCPAddr("tcp", host)
+        if err != nil {
+                fmt.Println("Error:", err)
+                return
+        }
+
+        conn, err := net.DialTCP("tcp", nil, addr)
+        if err != nil {
+                fmt.Println("Error:", err)
+                return
+        }
+        defer conn.Close()
+
+        _, err = conn.Write([]byte(val))
+        if err != nil {
+                fmt.Println("Error:", err)
+                return
+        }
+}
 
 func Bold(val string) string {
 	return "\x02" + val + "\x02"
