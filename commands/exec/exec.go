@@ -53,7 +53,11 @@ func (h *ExecCommand) Parse(msg msgsystem.Message) bool {
 			}
 
 			if len(params) > 0 {
-				fmt.Println("Executing:", params)
+				r := msgsystem.Message{
+					To: channel,
+					Msg: "Executing command!",
+				}
+				h.messagesOut <- r
 
 				c := strings.Split(params, " ")
 				e := exec.Command(c[0], c[1:]...)
@@ -61,7 +65,7 @@ func (h *ExecCommand) Parse(msg msgsystem.Message) bool {
 				fmt.Println("Output:", string(out))
 				fmt.Println("Error:", err)
 
-				r := msgsystem.Message{
+				r = msgsystem.Message{
 					To: []string{msg.Source},
 				}
 				if err != nil {
