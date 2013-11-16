@@ -4,7 +4,7 @@ import (
 	irc "github.com/fluffle/goirc/client"
 	"fmt"
 	"log"
-	_ "strings"
+	"strings"
 	"time"
 	"ircflu/app"
 	"ircflu/msgsystem"
@@ -48,6 +48,14 @@ func (h *IrcSubSystem) SetMessageOutChan(channel chan msgsystem.Message) {
 	h.messagesOut = channel
 }
 
+func (h *IrcSubSystem) Join(channel string) {
+	h.client.Join(channel)
+}
+
+func (h *IrcSubSystem) Part(channel string) {
+	h.client.Part(channel)
+}
+
 func (h *IrcSubSystem) Run() {
 	// channel signaling irc connection status
 	h.chConnected = make(chan bool)
@@ -75,6 +83,7 @@ func (h *IrcSubSystem) Run() {
 		msg := msgsystem.Message{
 			To: []string{channel},
 			Msg: line.Args[1],
+			Source: line.Src,
 		}
 		h.messagesIn <- msg
 	})
@@ -111,7 +120,11 @@ func (h *IrcSubSystem) Run() {
 				h.client.Privmsg(h.ircchannel, cm.Msg)
 			} else {
 				for _, to := range cm.To {
-					h.client.Privmsg(to, cm.Msg)
+					recv := to
+					if strings.Index(recv, "!~") > 0 {
+						recv = recv[0:strings.Index(recv, "!~")]
+					}
+					h.client.Privmsg(recv, cm.Msg)
 				}
 			}
 		}
