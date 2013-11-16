@@ -125,7 +125,7 @@ func ParseFirstLine(str string) ([]string, string) {
 
 func (h *CatSubSystem) Run() {
 	// Listen on catport:
-	go CatportServer(h.messagesOut, h.catfam, h.catbind)
+	go CatportServer(h.messagesIn, h.catfam, h.catbind)
 }
 
 func init() {
