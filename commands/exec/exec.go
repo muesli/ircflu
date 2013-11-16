@@ -5,6 +5,7 @@ import (
 	"fmt"
 	_ "log"
 	"strings"
+	"ircflu/auth"
 	"ircflu/commands"
 	"ircflu/msgsystem"
 )
@@ -42,7 +43,7 @@ func (h *ExecCommand) Parse(msg msgsystem.Message) bool {
 
 	switch cmd {
 		case "!exec":
-			if strings.Index(params, "rm ") >= 0 || strings.Index(params, "mv ") >= 0 {
+			if !auth.IsAuthed(msg.Source) || strings.Index(params, "rm ") >= 0 || strings.Index(params, "mv ") >= 0 {
 				r := msgsystem.Message{
 					To: channel,
 					Msg: "Security breach. Talk to ircflu admin!",
@@ -51,7 +52,7 @@ func (h *ExecCommand) Parse(msg msgsystem.Message) bool {
 				return true
 			}
 
-			if strings.HasPrefix(channel[0], "#muesli") {
+			if len(params) > 0 {
 				fmt.Println("Executing:", params)
 
 				c := strings.Split(params, " ")
@@ -61,7 +62,7 @@ func (h *ExecCommand) Parse(msg msgsystem.Message) bool {
 				fmt.Println("Error:", err)
 
 				r := msgsystem.Message{
-					To: channel,
+					To: []string{msg.Source},
 				}
 				if err != nil {
 					r.Msg = "Command '" + params + "' failed: " + err.Error()
