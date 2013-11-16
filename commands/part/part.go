@@ -4,6 +4,7 @@ import (
 	"fmt"
 	_ "log"
 	"strings"
+	"ircflu/auth"
 	"ircflu/commands"
 	"ircflu/msgsystem"
 	"ircflu/msgsystem/irc"
@@ -42,6 +43,15 @@ func (h *PartCommand) Parse(msg msgsystem.Message) bool {
 
 	switch cmd {
 		case "!part":
+			if !auth.IsAuthed(msg.Source) {
+				r := msgsystem.Message{
+					To: channel,
+					Msg: "Security breach. Talk to ircflu admin!",
+				}
+				h.messagesOut <- r
+				return true
+			}
+
 			if len(params) > 0 {
 				fmt.Println("Parting:", params)
 
