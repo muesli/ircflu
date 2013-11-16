@@ -70,11 +70,6 @@ func (h *GitHubHook) Request(ctx *web.Context) {
 	repo := repoData["name"].(string)
 	url := repoData["url"].(string) + "/compare/" + before[:8] + "..." + after[:8]
 
-	commitToken := "commits"
-	if commitCount == 1 {
-		commitToken = "commit"
-	}
-
 	var ircmsgs []msgsystem.Message
 	for _, c := range commitData {
 		commit := c.(map[string]interface{})
@@ -97,6 +92,10 @@ func (h *GitHubHook) Request(ctx *web.Context) {
 		ircmsgs = append(ircmsgs, msg)
 	}
 
+	commitToken := "commits"
+	if commitCount == 1 {
+		commitToken = "commit"
+	}
 	msg := msgsystem.Message{
 		Msg: fmt.Sprintf("[%s] %s pushed %s new %s to %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(user, "teal"), irctools.Bold(strconv.Itoa(commitCount)), commitToken, irctools.Colored(ref, "purple"), url),
 	}
