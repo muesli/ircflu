@@ -11,6 +11,9 @@ We use it not only to coordinate our development efforts and communicate, but
 also to get alerted about source-code changes on GitHub, when a ticket gets
 updated or a service on our servers runs into an issue.
 
+ircflu can do all that for us... except the communicating. It's not that kind
+of chatbot.
+
 ## Installation
 
 Make sure you have a working Go environment. See the [install instructions](http://golang.org/doc/install.html).
@@ -40,8 +43,8 @@ ircflu also runs an integrated HTTP server on port 12346, processing incoming
 GitHub (on /github) & GitLab (on /gitlab) web-hook calls which are triggered
 by a commit to your git repository. ircflu will in turn notify you on IRC.
 
-It also features a simplistic authentication system (!auth), supports aliases
-for commands (!alias) and executing external applications (!exec), forwarding
-their output to IRC.
+It comes with a simplistic authentication system (!auth), supports aliases for
+commands (!alias) and executing external applications (!exec), forwarding their
+output to IRC.
 
 More soon!
