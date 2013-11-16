@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/hoisie/web"
-	"ircflu/hooks"
+	"ircflu/msgsystem/web/hooks"
 	"ircflu/msgsystem"
 	"ircflu/msgsystem/irc/irctools"
 	"io/ioutil"
