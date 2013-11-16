@@ -4,6 +4,7 @@ import (
 	"fmt"
 	_ "log"
 	"strings"
+	"ircflu/auth"
 	"ircflu/commands"
 	"ircflu/msgsystem"
 )
@@ -43,6 +44,15 @@ func (h *AliasCommand) Parse(msg msgsystem.Message) bool {
 
 	switch cmd {
 		case "!alias":
+			if !auth.IsAuthed(msg.Source) {
+				r := msgsystem.Message{
+					To: channel,
+					Msg: "Security breach. Talk to ircflu admin!",
+				}
+				h.messagesOut <- r
+				return true
+			}
+
 			a := strings.Split(params, "=")
 
 			if len(a) == 2 {
