@@ -7,7 +7,6 @@ import (
 )
 
 type WebSubSystem struct {
-	name string
 	messagesIn chan msgsystem.Message
 	messagesOut chan msgsystem.Message
 
@@ -15,7 +14,7 @@ type WebSubSystem struct {
 }
 
 func (h *WebSubSystem) Name() string {
-	return h.name
+	return "web"
 }
 
 func (h *WebSubSystem) MessageInChan() chan msgsystem.Message {
@@ -39,7 +38,7 @@ func (h *WebSubSystem) Run() {
 }
 
 func init() {
-	w := WebSubSystem{name: "web"}
+	w := WebSubSystem{}
 
 	app.AddFlags([]app.CliFlag{
 		app.CliFlag{&w.addr, "webaddr", "0.0.0.0:12346", "net.Listen spec, to listen for json-api calls"},
