@@ -88,7 +88,10 @@ func ClientHandler(connection net.Conn, catmsgs chan msgsystem.Message) {
                 line = line2
                 to = newto
             }
-            cm := msgsystem.Message{to, line}
+            cm := msgsystem.Message{
+				To: to,
+				Msg: line,
+			}
             catmsgs <- cm
         }
     }
