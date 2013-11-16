@@ -7,8 +7,10 @@ import (
 
 	_ "ircflu/commands"
 	_ "ircflu/commands/alias"
+	_ "ircflu/commands/auth"
 	_ "ircflu/commands/exec"
 	_ "ircflu/commands/join"
+	_ "ircflu/commands/part"
 	_ "ircflu/commands/send"
 
 	"ircflu/msgsystem"
