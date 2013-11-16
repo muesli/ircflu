@@ -8,8 +8,10 @@ server, ready to process incoming JSON-API calls.
 
 At Tomahawk (http://tomahawk-player.org) we're all pretty much addicted to IRC.
 We use it not only to coordinate our development efforts and communicate, but
-also to get alerted about source-code changes on GitHub, when a ticket gets
-updated or a service on our servers runs into an issue.
+also to get alerted about source code changes on GitHub, when a ticket gets
+updated or a service on our servers runs into an issue. We can even use it to
+trigger commands being executed on our servers, e.g. to deploy the latest
+source code.
 
 ircflu can do all that for us... except the communicating. It's not that kind
 of chatbot.
