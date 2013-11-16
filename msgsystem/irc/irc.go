@@ -74,11 +74,10 @@ func (h *IrcSubSystem) Run() {
 	h.client.AddHandler("PRIVMSG", func(conn *irc.Conn, line *irc.Line) {
 		channel := line.Args[0]
 		if channel == h.client.Me.Nick {
-			// TODO: check if source is in main chan, else return
-			log.Println("Got via PM from " + line.Src)
+			log.Println("PM from " + line.Src)
 			channel = line.Src // replies go via PM too.
 		} else {
-			log.Println("Got via channel " + line.Args[0] + " from " + line.Src)
+			log.Println("Message in channel " + line.Args[0] + " from " + line.Src)
 		}
 
 		msg := msgsystem.Message{
