@@ -6,6 +6,7 @@ import (
 	"strings"
 	"ircflu/commands"
 	"ircflu/msgsystem"
+	"ircflu/msgsystem/irc"
 )
 
 type JoinCommand struct {
@@ -43,7 +44,11 @@ func (h *JoinCommand) Parse(msg msgsystem.Message) bool {
 		case "!join":
 			if len(params) > 0 {
 				fmt.Println("Joining:", params)
-//				h.client.Join(params)
+
+				ircclient := (*msgsystem.SubSystem("irc")).(*irc.IrcSubSystem)
+				if ircclient != nil {
+					ircclient.Join(params)
+				}
 			} else {
 				r := msgsystem.Message{
 					To: channel,
@@ -52,24 +57,6 @@ func (h *JoinCommand) Parse(msg msgsystem.Message) bool {
 				h.messagesOut <- r
 			}
 			return true
-
-		case "!part":
-			if len(params) > 0 {
-				fmt.Println("Parting:", params)
-//				h.client.Part(params)
-			} else {
-				r := msgsystem.Message{
-					To: channel,
-					Msg: "Usage: !part #chan",
-				}
-				h.messagesOut <- r
-			}
-			return true
-
-		default:
-			if !strings.HasPrefix(cmd, "!") {
-				h.messagesOut <- msg
-			}
 	}
 	return false
 }
