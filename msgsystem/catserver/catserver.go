@@ -90,7 +90,7 @@ func ClientHandler(connection net.Conn, catmsgs chan msgsystem.Message) {
             }
             cm := msgsystem.Message{
 				To: to,
-				Msg: line,
+				Msg: "!send " + line,
 			}
             catmsgs <- cm
         }
