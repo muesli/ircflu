@@ -4,7 +4,6 @@ import (
 	"fmt"
 	_ "log"
 	"strings"
-	"ircflu/auth"
 	"ircflu/commands"
 	"ircflu/msgsystem"
 	"ircflu/msgsystem/irc"
@@ -43,7 +42,7 @@ func (h *PartCommand) Parse(msg msgsystem.Message) bool {
 
 	switch cmd {
 		case "!part":
-			if !auth.IsAuthed(msg.Source) {
+			if !msg.Authed {
 				r := msgsystem.Message{
 					To: channel,
 					Msg: "Security breach. Talk to ircflu admin!",

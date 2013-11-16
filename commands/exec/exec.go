@@ -5,7 +5,6 @@ import (
 	"fmt"
 	_ "log"
 	"strings"
-	"ircflu/auth"
 	"ircflu/commands"
 	"ircflu/msgsystem"
 	"ircflu/msgsystem/irc/irctools"
@@ -44,7 +43,7 @@ func (h *ExecCommand) Parse(msg msgsystem.Message) bool {
 
 	switch cmd {
 		case "!exec":
-			if !auth.IsAuthed(msg.Source) || strings.Index(params, "rm ") >= 0 || strings.Index(params, "mv ") >= 0 {
+			if !msg.Authed || strings.Index(params, "rm ") >= 0 || strings.Index(params, "mv ") >= 0 {
 				r := msgsystem.Message{
 					To: channel,
 					Msg: "Security breach. Talk to ircflu admin!",

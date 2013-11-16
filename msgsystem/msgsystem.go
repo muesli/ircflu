@@ -19,6 +19,7 @@ type Message struct {
 	To  []string
 	Msg string
 	Source string
+	Authed bool
 }
 
 var (

@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 	"ircflu/app"
+	"ircflu/auth"
 	"ircflu/msgsystem"
 )
 
@@ -84,6 +85,7 @@ func (h *IrcSubSystem) Run() {
 			To: []string{channel},
 			Msg: line.Args[1],
 			Source: line.Src,
+			Authed: auth.IsAuthed(line.Src),
 		}
 		h.messagesIn <- msg
 	})
