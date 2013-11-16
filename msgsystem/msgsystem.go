@@ -21,7 +21,7 @@ type Message struct {
 }
 
 var (
-	MessagesIn = make(chan Message)
+	CommandsIn = make(chan Message)
 	MessagesOut = make(chan Message)
 
 	subsystems []*MsgSubSystem
@@ -34,7 +34,7 @@ func init() {
 func RegisterSubSystem(system MsgSubSystem) {
 	fmt.Println("Registering msg-subsystem:", system.Name())
 
-	system.SetMessageInChan(MessagesIn)
+	system.SetMessageInChan(CommandsIn)
 	system.SetMessageOutChan(MessagesOut)
 
 	subsystems = append(subsystems, &system)
