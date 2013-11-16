@@ -16,15 +16,16 @@ type MsgSubSystem interface {
 }
 
 type Message struct {
-    To  []string
-    Msg string
+	To  []string
+	Msg string
+	Source string
 }
 
 var (
 	CommandsIn = make(chan Message)
 	MessagesOut = make(chan Message)
 
-	subsystems []*MsgSubSystem
+	subsystems map[string]*MsgSubSystem = make(map[string]*MsgSubSystem)
 )
 
 func init() {
@@ -37,7 +38,16 @@ func RegisterSubSystem(system MsgSubSystem) {
 	system.SetMessageInChan(CommandsIn)
 	system.SetMessageOutChan(MessagesOut)
 
-	subsystems = append(subsystems, &system)
+	subsystems[system.Name()] = &system
+}
+
+func SubSystem(identifier string) *MsgSubSystem {
+	system, ok := subsystems[identifier]
+	if ok {
+		return system
+	}
+
+	return nil
 }
 
 func StartSubSystems() {
