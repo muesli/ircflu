@@ -23,6 +23,7 @@ Make sure you have a working Go environment. See the [install instructions](http
 To install / compile ircflu from source, simply run:
 
     go get github.com/fluffle/goirc/client
+    go get github.com/hoisie/web
     git clone git://github.com/muesli/ircflu.git
     cd ircflu
     go build
