@@ -14,7 +14,7 @@ type SendCommand struct {
 }
 
 func (h *SendCommand) Name() string {
-	return "join"
+	return "send"
 }
 
 func (h *SendCommand) MessageInChan() chan msgsystem.Message {
