@@ -70,6 +70,7 @@ func (h *AliasCommand) Parse(msg msgsystem.Message) bool {
 				fmt.Println("Alias:", v, strings.TrimSpace(msg.Msg), ok)
 				r := msgsystem.Message{
 					To: channel,
+					Source: msg.Source,
 					Msg: "!" + v,
 				}
 				h.messagesIn <- r
