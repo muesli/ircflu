@@ -4,7 +4,7 @@ import (
 	irc "github.com/fluffle/goirc/client"
 	"fmt"
 	"log"
-	"strings"
+	_ "strings"
 	"time"
 	"ircflu/app"
 	"ircflu/msgsystem"
@@ -63,10 +63,6 @@ func (h *IrcSubSystem) Run() {
 		h.chConnected <- false
 	})
 	h.client.AddHandler("PRIVMSG", func(conn *irc.Conn, line *irc.Line) {
-		if len(line.Args) < 2 || !strings.HasPrefix(line.Args[1], "!") {
-			return
-		}
-
 		channel := line.Args[0]
 		if channel == h.client.Me.Nick {
 			// TODO: check if source is in main chan, else return
@@ -76,28 +72,11 @@ func (h *IrcSubSystem) Run() {
 			log.Println("Got via channel " + line.Args[0] + " from " + line.Src)
 		}
 
-		msg := strings.Split(line.Args[1], " ")
-		cmd := msg[0]
-		params := strings.Join(msg[1:], " ")
-		fmt.Println("Command: " + cmd + " with Params: " + params)
-
-		switch cmd {
-			case "!join":
-				if len(line.Args) == 2 {
-					h.client.Join(params)
-				} else {
-					h.client.Privmsg(channel, "Usage: !join #chan  or  !join #chan key")
-				}
-			case "!part":
-				if len(line.Args) == 2 {
-					h.client.Part(params)
-				} else {
-					h.client.Privmsg(channel, "Usage: !part #chan")
-				}
-			default:
-				h.client.Privmsg(channel, "Invalid command: " + cmd)
-				return
+		msg := msgsystem.Message{
+			To: []string{channel},
+			Msg: line.Args[1],
 		}
+		h.messagesIn <- msg
 	})
 
 	// loop on IRC dis/connected events
@@ -127,6 +106,7 @@ func (h *IrcSubSystem) Run() {
 	go func() {
 		for {
 			cm := <-h.messagesOut
+			fmt.Println("Sending:", cm.To, cm.Msg)
 			if len(cm.To) == 0 {
 				h.client.Privmsg(h.ircchannel, cm.Msg)
 			} else {
