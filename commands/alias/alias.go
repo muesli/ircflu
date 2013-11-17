@@ -4,9 +4,9 @@ import (
 	"fmt"
 	_ "log"
 	"strings"
-	"ircflu/commands"
-	"ircflu/msgsystem"
-	"ircflu/msgsystem/irc/irctools"
+	"github.com/muesli/ircflu/commands"
+	"github.com/muesli/ircflu/msgsystem"
+	"github.com/muesli/ircflu/msgsystem/irc/irctools"
 )
 
 type AliasCommand struct {

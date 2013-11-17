@@ -6,9 +6,9 @@ import (
 	"log"
 	"strings"
 	"time"
-	"ircflu/app"
-	"ircflu/auth"
-	"ircflu/msgsystem"
+	"github.com/muesli/ircflu/app"
+	"github.com/muesli/ircflu/auth"
+	"github.com/muesli/ircflu/msgsystem"
 )
 
 type IrcSubSystem struct {

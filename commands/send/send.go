@@ -4,8 +4,8 @@ import (
 	_ "fmt"
 	_ "log"
 	"strings"
-	"ircflu/commands"
-	"ircflu/msgsystem"
+	"github.com/muesli/ircflu/commands"
+	"github.com/muesli/ircflu/msgsystem"
 )
 
 type SendCommand struct {

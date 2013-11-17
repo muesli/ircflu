@@ -2,8 +2,8 @@ package irc
 
 import (
 	"github.com/hoisie/web"
-	"ircflu/app"
-	"ircflu/msgsystem"
+	"github.com/muesli/ircflu/app"
+	"github.com/muesli/ircflu/msgsystem"
 )
 
 type WebSubSystem struct {

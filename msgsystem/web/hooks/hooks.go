@@ -5,7 +5,7 @@ import (
 	_ "strings"
 	_ "time"
 	"github.com/hoisie/web"
-	"ircflu/msgsystem"
+	"github.com/muesli/ircflu/msgsystem"
 )
 
 var (

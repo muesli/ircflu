@@ -9,8 +9,8 @@ import (
 	"log"
 	"io"
 	"strings"
-	"ircflu/app"
-	"ircflu/msgsystem"
+	"github.com/muesli/ircflu/app"
+	"github.com/muesli/ircflu/msgsystem"
 )
 
 type CatSubSystem struct {

@@ -2,7 +2,7 @@ package commands
 
 import (
 	"fmt"
-	"ircflu/msgsystem"
+	"github.com/muesli/ircflu/msgsystem"
 )
 
 type Command interface {

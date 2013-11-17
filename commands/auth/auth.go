@@ -4,9 +4,9 @@ import (
 	_ "fmt"
 	_ "log"
 	"strings"
-	"ircflu/auth"
-	"ircflu/commands"
-	"ircflu/msgsystem"
+	"github.com/muesli/ircflu/auth"
+	"github.com/muesli/ircflu/commands"
+	"github.com/muesli/ircflu/msgsystem"
 )
 
 type AuthCommand struct {

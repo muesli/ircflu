@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/hoisie/web"
-	"ircflu/msgsystem/web/hooks"
-	"ircflu/msgsystem"
-	"ircflu/msgsystem/irc/irctools"
+	"github.com/muesli/ircflu/msgsystem/web/hooks"
+	"github.com/muesli/ircflu/msgsystem"
+	"github.com/muesli/ircflu/msgsystem/irc/irctools"
 	"strconv"
 	"strings"
 )
