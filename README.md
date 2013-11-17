@@ -51,3 +51,5 @@ commands (!alias) and executing external applications (!exec), forwarding their
 output to IRC.
 
 More soon!
+
+Continous integration: [![Build Status](https://secure.travis-ci.org/muesli/ircflu.png)](http://travis-ci.org/muesli/ircflu)
