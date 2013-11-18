@@ -122,8 +122,8 @@ func (h *IrcSubSystem) Run() {
 			} else {
 				for _, to := range cm.To {
 					recv := to
-					if strings.Index(recv, "!~") > 0 {
-						recv = recv[0:strings.Index(recv, "!~")]
+					if strings.Index(recv, "!") > 0 {
+						recv = recv[0:strings.Index(recv, "!")]
 					}
 					h.client.Privmsg(recv, cm.Msg)
 				}
