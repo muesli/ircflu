@@ -12,7 +12,6 @@ import (
 )
 
 type IrcSubSystem struct {
-	name string
 	messagesIn chan msgsystem.Message
 	messagesOut chan msgsystem.Message
 
@@ -30,7 +29,7 @@ type IrcSubSystem struct {
 }
 
 func (h *IrcSubSystem) Name() string {
-	return h.name
+	return "irc"
 }
 
 func (h *IrcSubSystem) MessageInChan() chan msgsystem.Message {
@@ -133,7 +132,7 @@ func (h *IrcSubSystem) Run() {
 }
 
 func init() {
-	irc := IrcSubSystem{name: "irc"}
+	irc := IrcSubSystem{}
 
 	app.AddFlags([]app.CliFlag{
 		app.CliFlag{&irc.irchost, "irchost", "localhost:6667", "Hostname of IRC server, eg: irc.example.org:6667"},
