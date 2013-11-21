@@ -12,9 +12,6 @@ import (
 )
 
 type IrcSubSystem struct {
-	messagesIn  chan msgsystem.Message
-	messagesOut chan msgsystem.Message
-
 	// channel signaling irc connection status
 	ConnectedState chan bool
 
@@ -32,22 +29,6 @@ type IrcSubSystem struct {
 
 func (h *IrcSubSystem) Name() string {
 	return "irc"
-}
-
-func (h *IrcSubSystem) MessageInChan() chan msgsystem.Message {
-	return h.messagesIn
-}
-
-func (h *IrcSubSystem) SetMessageInChan(channel chan msgsystem.Message) {
-	h.messagesIn = channel
-}
-
-func (h *IrcSubSystem) MessageOutChan() chan msgsystem.Message {
-	return h.messagesOut
-}
-
-func (h *IrcSubSystem) SetMessageOutChan(channel chan msgsystem.Message) {
-	h.messagesOut = channel
 }
 
 func (h *IrcSubSystem) Rejoin() {
@@ -75,7 +56,7 @@ func (h *IrcSubSystem) Part(channel string) {
 	}
 }
 
-func (h *IrcSubSystem) Run() {
+func (h *IrcSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 	// channel signaling irc connection status
 	h.ConnectedState = make(chan bool)
 
@@ -104,7 +85,7 @@ func (h *IrcSubSystem) Run() {
 			Source: line.Src,
 			Authed: auth.IsAuthed(line.Src),
 		}
-		h.messagesIn <- msg
+		channelIn <- msg
 	})
 
 	// loop on IRC dis/connected events
@@ -140,7 +121,7 @@ func (h *IrcSubSystem) Run() {
 
 	go func() {
 		for {
-			cm := <-h.messagesOut
+			cm := <-channelOut
 			fmt.Println("Sending:", cm.To, cm.Msg)
 			if len(cm.To) == 0 {
 				h.client.Privmsg(h.ircchannel, cm.Msg)

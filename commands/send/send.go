@@ -17,22 +17,6 @@ func (h *SendCommand) Name() string {
 	return "send"
 }
 
-func (h *SendCommand) MessageInChan() chan msgsystem.Message {
-	return h.messagesIn
-}
-
-func (h *SendCommand) SetMessageInChan(channel chan msgsystem.Message) {
-	h.messagesIn = channel
-}
-
-func (h *SendCommand) MessageOutChan() chan msgsystem.Message {
-	return h.messagesOut
-}
-
-func (h *SendCommand) SetMessageOutChan(channel chan msgsystem.Message) {
-	h.messagesOut = channel
-}
-
 func (h *SendCommand) Parse(msg msgsystem.Message) bool {
 	channel := msg.To
 	m := strings.Split(msg.Msg, " ")
@@ -57,6 +41,11 @@ func (h *SendCommand) Parse(msg msgsystem.Message) bool {
 		return true
 	}
 	return false
+}
+
+func (h *SendCommand) Run(channelIn, channelOut chan msgsystem.Message) {
+	h.messagesIn = channelIn
+	h.messagesOut = channelOut
 }
 
 func init() {

@@ -33,9 +33,16 @@ Now we can build ircflu:
     cd ircflu
     go build
 
-To run the application you will need to specify a few parameters:
+To run the application you will need to specify at least a few parameters:
 
-    ./ircflu -irchost="some.server:6667" -ircchannel="#ircflu" -authpassword="some_password"
+    ./ircflu -irchost="some.server:6667" -ircchannel="#ircflu"
+
+You can control which commands you want to be enabled with the '-commands'
+option. Be aware that enabling the 'exec' command allows authenticated users
+to remotely execute arbitrary commands on your machine! To start ircflu with
+all currently available commands run:
+
+    ./ircflu -commands="alias,auth,exec,join,part,send" -authpassword="some_password" -irchost="some.server:6667" -ircchannel="#ircflu"
 
 Run ircflu -help to see a full list of options!
 

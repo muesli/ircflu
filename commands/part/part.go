@@ -18,22 +18,6 @@ func (h *PartCommand) Name() string {
 	return "part"
 }
 
-func (h *PartCommand) MessageInChan() chan msgsystem.Message {
-	return h.messagesIn
-}
-
-func (h *PartCommand) SetMessageInChan(channel chan msgsystem.Message) {
-	h.messagesIn = channel
-}
-
-func (h *PartCommand) MessageOutChan() chan msgsystem.Message {
-	return h.messagesOut
-}
-
-func (h *PartCommand) SetMessageOutChan(channel chan msgsystem.Message) {
-	h.messagesOut = channel
-}
-
 func (h *PartCommand) Parse(msg msgsystem.Message) bool {
 	channel := msg.To
 	m := strings.Split(msg.Msg, " ")
@@ -68,6 +52,11 @@ func (h *PartCommand) Parse(msg msgsystem.Message) bool {
 		return true
 	}
 	return false
+}
+
+func (h *PartCommand) Run(channelIn, channelOut chan msgsystem.Message) {
+	h.messagesIn = channelIn
+	h.messagesOut = channelOut
 }
 
 func init() {

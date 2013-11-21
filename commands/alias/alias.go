@@ -20,22 +20,6 @@ func (h *AliasCommand) Name() string {
 	return "alias"
 }
 
-func (h *AliasCommand) MessageInChan() chan msgsystem.Message {
-	return h.messagesIn
-}
-
-func (h *AliasCommand) SetMessageInChan(channel chan msgsystem.Message) {
-	h.messagesIn = channel
-}
-
-func (h *AliasCommand) MessageOutChan() chan msgsystem.Message {
-	return h.messagesOut
-}
-
-func (h *AliasCommand) SetMessageOutChan(channel chan msgsystem.Message) {
-	h.messagesOut = channel
-}
-
 func (h *AliasCommand) Parse(msg msgsystem.Message) bool {
 	channel := msg.To
 	m := strings.Split(msg.Msg, " ")
@@ -95,6 +79,11 @@ func (h *AliasCommand) Parse(msg msgsystem.Message) bool {
 	}
 
 	return false
+}
+
+func (h *AliasCommand) Run(channelIn, channelOut chan msgsystem.Message) {
+	h.messagesIn = channelIn
+	h.messagesOut = channelOut
 }
 
 func init() {

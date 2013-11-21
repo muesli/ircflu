@@ -31,10 +31,6 @@ func (h *GitHubHook) Path() string {
 	return h.path
 }
 
-func (h *GitHubHook) MessageChan() chan msgsystem.Message {
-	return h.messages
-}
-
 func (h *GitHubHook) SetMessageChan(channel chan msgsystem.Message) {
 	h.messages = channel
 }

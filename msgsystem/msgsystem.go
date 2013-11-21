@@ -5,14 +5,8 @@ import (
 )
 
 type MsgSubSystem interface {
-	MessageInChan() chan Message
-	SetMessageInChan(channel chan Message)
-
-	MessageOutChan() chan Message
-	SetMessageOutChan(channel chan Message)
-
 	Name() string
-	Run()
+	Run(channelIn, channelOut chan Message)
 }
 
 type Message struct {
@@ -36,9 +30,6 @@ func init() {
 func RegisterSubSystem(system MsgSubSystem) {
 	fmt.Println("Registering msg-subsystem:", system.Name())
 
-	system.SetMessageInChan(CommandsIn)
-	system.SetMessageOutChan(MessagesOut)
-
 	subsystems[system.Name()] = &system
 }
 
@@ -53,6 +44,6 @@ func SubSystem(identifier string) *MsgSubSystem {
 
 func StartSubSystems() {
 	for _, system := range subsystems {
-		(*system).Run()
+		(*system).Run(CommandsIn, MessagesOut)
 	}
 }

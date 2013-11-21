@@ -8,39 +8,23 @@ import (
 )
 
 type Command interface {
-	MessageInChan() chan msgsystem.Message
-	SetMessageInChan(channel chan msgsystem.Message)
-	MessageOutChan() chan msgsystem.Message
-	SetMessageOutChan(channel chan msgsystem.Message)
-
 	Name() string
-
+	Run(channelIn, channelOut chan msgsystem.Message)
 	Parse(msg msgsystem.Message) bool
 }
 
 var (
-	commands []*Command
-	enabledCommands string
+	commands map[string]*Command = make(map[string]*Command)
+	enabledCommands map[string]*Command = make(map[string]*Command)
+
+	activateCommands string
 )
-
-func IsCommandEnabled(name string) bool {
-	foundAsEnabled := false
-	cmds := strings.Split(enabledCommands, ",")
-	for _, cmdName := range cmds {
-		cmdName = strings.TrimSpace(cmdName)
-		if cmdName == name {
-			foundAsEnabled = true
-		}
-	}
-
-	return foundAsEnabled
-}
 
 func init() {
 	fmt.Println("Initializing command parsers...")
 
 	app.AddFlags([]app.CliFlag{
-		app.CliFlag{&enabledCommands, "commands", "alias,auth,join,part,send", "Comma-separated list of commands (alias,auth,exec,join,part,send) you want to enable"},
+		app.CliFlag{&activateCommands, "commands", "alias,auth,join,part,send", "Comma-separated list of commands (alias,auth,exec,join,part,send) you want to enable"},
 	})
 
 	go func() {
@@ -61,8 +45,41 @@ func init() {
 }
 
 func RegisterCommand(command Command) {
-	fmt.Println("Registering command:", command.Name())
-	command.SetMessageInChan(msgsystem.CommandsIn)
-	command.SetMessageOutChan(msgsystem.MessagesOut)
-	commands = append(commands, &command)
+//	fmt.Println("Registering command:", command.Name())
+
+	commands[command.Name()] = &command
+}
+
+func GetCommand(identifier string) *Command {
+	command, ok := commands[identifier]
+	if ok {
+		return command
+	}
+
+	return nil
+}
+
+func IsCommandEnabled(name string) bool {
+	_, ok := enabledCommands[name]
+	return ok
+}
+
+func StartCommands() {
+	cmds := strings.Split(activateCommands, ",")
+	for _, cmdName := range cmds {
+		cmdName = strings.TrimSpace(cmdName)
+		command := GetCommand(cmdName)
+		if command != nil {
+			enabledCommands[(*command).Name()] = command
+		} else {
+			fmt.Println("Command not found:", cmdName)
+		}
+	}
+
+	for _, command := range commands {
+		if IsCommandEnabled((*command).Name()) {
+			fmt.Println("Starting command:", (*command).Name())
+			(*command).Run(msgsystem.CommandsIn, msgsystem.MessagesOut)
+		}
+	}
 }

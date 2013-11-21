@@ -14,32 +14,12 @@ import (
 )
 
 type CatSubSystem struct {
-	name        string
-	messagesIn  chan msgsystem.Message
-	messagesOut chan msgsystem.Message
-
 	catbind string
 	catfam  string
 }
 
 func (h *CatSubSystem) Name() string {
-	return h.name
-}
-
-func (h *CatSubSystem) MessageInChan() chan msgsystem.Message {
-	return h.messagesIn
-}
-
-func (h *CatSubSystem) SetMessageInChan(channel chan msgsystem.Message) {
-	h.messagesIn = channel
-}
-
-func (h *CatSubSystem) MessageOutChan() chan msgsystem.Message {
-	return h.messagesOut
-}
-
-func (h *CatSubSystem) SetMessageOutChan(channel chan msgsystem.Message) {
-	h.messagesOut = channel
+	return "catserver"
 }
 
 func CatportServer(catmsgs chan msgsystem.Message, catfamily string, catbind string) {
@@ -126,13 +106,13 @@ func ParseFirstLine(str string) ([]string, string) {
 	return parts, rest
 }
 
-func (h *CatSubSystem) Run() {
+func (h *CatSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 	// Listen on catport:
-	go CatportServer(h.messagesIn, h.catfam, h.catbind)
+	go CatportServer(channelIn, h.catfam, h.catbind)
 }
 
 func init() {
-	cat := CatSubSystem{name: "cat"}
+	cat := CatSubSystem{}
 
 	app.AddFlags([]app.CliFlag{
 		app.CliFlag{&cat.catbind, "catbind", ":12345", "net.Listen spec, to listen for IRCCat msgs"},

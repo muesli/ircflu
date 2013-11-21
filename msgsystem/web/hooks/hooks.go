@@ -15,7 +15,6 @@ var (
 type Hook interface {
 	Request(ctx *web.Context)
 
-	MessageChan() chan msgsystem.Message
 	SetMessageChan(channel chan msgsystem.Message)
 
 	Name() string

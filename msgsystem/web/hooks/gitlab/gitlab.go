@@ -32,10 +32,6 @@ func (h *GitLabHook) Path() string {
 	return h.path
 }
 
-func (h *GitLabHook) MessageChan() chan msgsystem.Message {
-	return h.messages
-}
-
 func (h *GitLabHook) SetMessageChan(channel chan msgsystem.Message) {
 	h.messages = channel
 }

@@ -19,22 +19,6 @@ func (h *ExecCommand) Name() string {
 	return "exec"
 }
 
-func (h *ExecCommand) MessageInChan() chan msgsystem.Message {
-	return h.messagesIn
-}
-
-func (h *ExecCommand) SetMessageInChan(channel chan msgsystem.Message) {
-	h.messagesIn = channel
-}
-
-func (h *ExecCommand) MessageOutChan() chan msgsystem.Message {
-	return h.messagesOut
-}
-
-func (h *ExecCommand) SetMessageOutChan(channel chan msgsystem.Message) {
-	h.messagesOut = channel
-}
-
 func (h *ExecCommand) Parse(msg msgsystem.Message) bool {
 	channel := msg.To
 	m := strings.Split(msg.Msg, " ")
@@ -87,6 +71,11 @@ func (h *ExecCommand) Parse(msg msgsystem.Message) bool {
 	}
 
 	return false
+}
+
+func (h *ExecCommand) Run(channelIn, channelOut chan msgsystem.Message) {
+	h.messagesIn = channelIn
+	h.messagesOut = channelOut
 }
 
 func init() {

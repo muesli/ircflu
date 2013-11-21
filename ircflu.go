@@ -5,7 +5,7 @@ import (
 
 	"github.com/muesli/ircflu/app"
 
-	_ "github.com/muesli/ircflu/commands"
+	"github.com/muesli/ircflu/commands"
 	_ "github.com/muesli/ircflu/commands/alias"
 	_ "github.com/muesli/ircflu/commands/auth"
 	_ "github.com/muesli/ircflu/commands/exec"
@@ -24,6 +24,7 @@ import (
 
 func main() {
 	app.Run()
+	commands.StartCommands()
 	msgsystem.StartSubSystems()
 
 	ch := make(chan bool)

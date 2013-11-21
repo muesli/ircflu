@@ -18,22 +18,6 @@ func (h *AuthCommand) Name() string {
 	return "auth"
 }
 
-func (h *AuthCommand) MessageInChan() chan msgsystem.Message {
-	return h.messagesIn
-}
-
-func (h *AuthCommand) SetMessageInChan(channel chan msgsystem.Message) {
-	h.messagesIn = channel
-}
-
-func (h *AuthCommand) MessageOutChan() chan msgsystem.Message {
-	return h.messagesOut
-}
-
-func (h *AuthCommand) SetMessageOutChan(channel chan msgsystem.Message) {
-	h.messagesOut = channel
-}
-
 func (h *AuthCommand) Parse(msg msgsystem.Message) bool {
 	channel := msg.To
 	m := strings.Split(msg.Msg, " ")
@@ -64,6 +48,11 @@ func (h *AuthCommand) Parse(msg msgsystem.Message) bool {
 		return true
 	}
 	return false
+}
+
+func (h *AuthCommand) Run(channelIn, channelOut chan msgsystem.Message) {
+	h.messagesIn = channelIn
+	h.messagesOut = channelOut
 }
 
 func init() {

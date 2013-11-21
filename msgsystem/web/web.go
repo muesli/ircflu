@@ -7,9 +7,6 @@ import (
 )
 
 type WebSubSystem struct {
-	messagesIn  chan msgsystem.Message
-	messagesOut chan msgsystem.Message
-
 	addr string
 }
 
@@ -17,23 +14,7 @@ func (h *WebSubSystem) Name() string {
 	return "web"
 }
 
-func (h *WebSubSystem) MessageInChan() chan msgsystem.Message {
-	return h.messagesIn
-}
-
-func (h *WebSubSystem) SetMessageInChan(channel chan msgsystem.Message) {
-	h.messagesIn = channel
-}
-
-func (h *WebSubSystem) MessageOutChan() chan msgsystem.Message {
-	return h.messagesOut
-}
-
-func (h *WebSubSystem) SetMessageOutChan(channel chan msgsystem.Message) {
-	h.messagesOut = channel
-}
-
-func (h *WebSubSystem) Run() {
+func (h *WebSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 	go web.Run(h.addr)
 }
 

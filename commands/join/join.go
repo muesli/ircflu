@@ -18,22 +18,6 @@ func (h *JoinCommand) Name() string {
 	return "join"
 }
 
-func (h *JoinCommand) MessageInChan() chan msgsystem.Message {
-	return h.messagesIn
-}
-
-func (h *JoinCommand) SetMessageInChan(channel chan msgsystem.Message) {
-	h.messagesIn = channel
-}
-
-func (h *JoinCommand) MessageOutChan() chan msgsystem.Message {
-	return h.messagesOut
-}
-
-func (h *JoinCommand) SetMessageOutChan(channel chan msgsystem.Message) {
-	h.messagesOut = channel
-}
-
 func (h *JoinCommand) Parse(msg msgsystem.Message) bool {
 	channel := msg.To
 	m := strings.Split(msg.Msg, " ")
@@ -68,6 +52,11 @@ func (h *JoinCommand) Parse(msg msgsystem.Message) bool {
 		return true
 	}
 	return false
+}
+
+func (h *JoinCommand) Run(channelIn, channelOut chan msgsystem.Message) {
+	h.messagesIn = channelIn
+	h.messagesOut = channelOut
 }
 
 func init() {
