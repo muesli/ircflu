@@ -1,3 +1,5 @@
+// ircflu's application container. Handles command-line arguments
+// parsing.
 package app
 
 import (

@@ -1,3 +1,4 @@
+// ircflu's IRC client subsystem.
 package irc
 
 import (

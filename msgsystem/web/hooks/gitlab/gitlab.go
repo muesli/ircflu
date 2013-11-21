@@ -1,3 +1,4 @@
+// A GitLab web-hook sending messages when new commits arrive.
 package gitlab
 
 import (

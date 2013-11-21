@@ -1,6 +1,6 @@
 // Based on gocat's catserver by Richard Jones - https://github.com/RJ/gocat
 // Listens on a TCP port, parses first line for addressees,
-// Puts Message onto the out channel.
+// puts Message onto the out channel.
 package catserver
 
 import (

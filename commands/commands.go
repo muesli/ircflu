@@ -1,3 +1,4 @@
+// ircflu's central commands controller and dispatcher.
 package commands
 
 import (

@@ -1,3 +1,5 @@
+// ircflu's central messaging system. Handles incoming commands- and outgoing
+// messages-routing.
 package msgsystem
 
 import (

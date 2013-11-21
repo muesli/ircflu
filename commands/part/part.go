@@ -1,3 +1,4 @@
+// The part command makes ircflu part a joined channel.
 package partCmd
 
 import (

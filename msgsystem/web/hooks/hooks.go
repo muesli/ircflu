@@ -1,3 +1,4 @@
+// ircflu's web-hook subsystem.
 package hooks
 
 import (

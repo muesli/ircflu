@@ -1,3 +1,4 @@
+// ircflu's integrated web-server to handle web-hooks.
 package irc
 
 import (

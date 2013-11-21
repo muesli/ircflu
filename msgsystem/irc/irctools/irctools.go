@@ -1,3 +1,4 @@
+// A collection of convenient IRC styling methods.
 package irctools
 
 import (

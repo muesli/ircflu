@@ -1,3 +1,4 @@
+// The send command makes ircflu talk on an IRC channel.
 package sendCmd
 
 import (

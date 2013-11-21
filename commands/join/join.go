@@ -1,3 +1,4 @@
+// The join command makes ircflu join another channel.
 package joinCmd
 
 import (

@@ -1,3 +1,4 @@
+// The exec command lets you remotely execute arbitrary commands.
 package execCmd
 
 import (

@@ -1,3 +1,4 @@
+// A GitHub web-hook sending messages when new commits arrive.
 package github
 
 import (

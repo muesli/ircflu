@@ -1,3 +1,4 @@
+// The alias command lets you setup shortcuts to lengthy commands.
 package aliasCmd
 
 import (

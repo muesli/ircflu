@@ -1,3 +1,4 @@
+// The auth module is responsible for managing client authentications.
 package auth
 
 import (

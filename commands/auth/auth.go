@@ -1,3 +1,4 @@
+// The auth command lets clients authenticate to unlock secured commands.
 package authCmd
 
 import (
