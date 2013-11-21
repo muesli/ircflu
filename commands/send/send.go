@@ -43,6 +43,7 @@ func (h *SendCommand) Parse(msg msgsystem.Message) bool {
 		case "!send":
 			if len(params) > 0 {
 				r := msgsystem.Message{
+					To: channel,
 					Msg: params,
 				}
 				h.messagesOut <- r
