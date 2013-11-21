@@ -26,7 +26,6 @@ func PostToIrcFlu(host string, val string) {
         }
 
         _, err = conn.Write([]byte("\n"))
-        conn.Close()
 }
 
 func Bold(val string) string {
