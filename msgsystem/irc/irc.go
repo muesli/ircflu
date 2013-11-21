@@ -173,7 +173,7 @@ func init() {
 		app.CliFlag{&irc.ircnick, "ircnick", "ircflu", "Nickname to use for IRC"},
 		app.CliFlag{&irc.ircpassword, "ircpassword", "", "Password to use to connect to IRC server"},
 		app.CliFlag{&irc.ircchannel, "ircchannel", "#ircflutest", "Which channel to join"},
-		//	app.CliFlag{&irc.ircssl, "ircssl", false, "Use SSL for IRC connection"},
+		app.CliFlag{&irc.ircssl, "ircssl", false, "Use SSL for IRC connection"},
 	})
 
 	msgsystem.RegisterSubSystem(&irc)

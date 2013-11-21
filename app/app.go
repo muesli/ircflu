@@ -7,7 +7,7 @@ import (
 type CliFlag struct {
 	V     interface{}
 	Name  string
-	Value string
+	Value interface{}
 	Desc  string
 }
 
@@ -23,7 +23,12 @@ func AddFlags(flags []CliFlag) {
 
 func Run() {
 	for _, f := range appflags {
-		flag.StringVar((f.V).(*string), f.Name, f.Value, f.Desc)
+		switch f.Value.(type) {
+			case string:
+				flag.StringVar((f.V).(*string), f.Name, f.Value.(string), f.Desc)
+			case bool:
+				flag.BoolVar((f.V).(*bool), f.Name, f.Value.(bool), f.Desc)
+		}
 	}
 
 	flag.Parse()
