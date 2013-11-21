@@ -16,7 +16,7 @@ type IrcSubSystem struct {
 	messagesOut chan msgsystem.Message
 
 	// channel signaling irc connection status
-	chConnected chan bool
+	ConnectedState chan bool
 
 	// setup IRC client:
 	client *irc.Conn
@@ -26,6 +26,8 @@ type IrcSubSystem struct {
 	ircpassword string
 	ircssl      bool
 	ircchannel  string
+
+	channels    []string
 }
 
 func (h *IrcSubSystem) Name() string {
@@ -48,27 +50,44 @@ func (h *IrcSubSystem) SetMessageOutChan(channel chan msgsystem.Message) {
 	h.messagesOut = channel
 }
 
+func (h *IrcSubSystem) Rejoin() {
+	for _, channel := range h.channels {
+		h.client.Join(channel)
+	}
+}
+
 func (h *IrcSubSystem) Join(channel string) {
+	channel = strings.TrimSpace(channel)
 	h.client.Join(channel)
+
+	h.channels = append(h.channels, channel)
 }
 
 func (h *IrcSubSystem) Part(channel string) {
+	channel = strings.TrimSpace(channel)
 	h.client.Part(channel)
+
+	for k, v := range h.channels {
+		if v == channel {
+			h.channels = append(h.channels[:k], h.channels[k+1:]...)
+			return
+		}
+	}
 }
 
 func (h *IrcSubSystem) Run() {
 	// channel signaling irc connection status
-	h.chConnected = make(chan bool)
+	h.ConnectedState = make(chan bool)
 
 	// setup IRC client:
 	h.client = irc.SimpleClient(h.ircnick, "ircflu", "ircflu")
 	h.client.SSL = h.ircssl
 
 	h.client.AddHandler(irc.CONNECTED, func(conn *irc.Conn, line *irc.Line) {
-		h.chConnected <- true
+		h.ConnectedState <- true
 	})
 	h.client.AddHandler(irc.DISCONNECTED, func(conn *irc.Conn, line *irc.Line) {
-		h.chConnected <- false
+		h.ConnectedState <- false
 	})
 	h.client.AddHandler("PRIVMSG", func(conn *irc.Conn, line *irc.Line) {
 		channel := line.Args[0]
@@ -99,10 +118,17 @@ func (h *IrcSubSystem) Run() {
 				continue
 			}
 			for {
-				status := <-h.chConnected
+				status := <-h.ConnectedState
 				if status {
 					log.Println("Connected to IRC")
-					h.client.Join(h.ircchannel)
+
+					if len(h.channels) == 0 {
+						// join default channel
+						h.Join(h.ircchannel)
+					} else {
+						// we must have been disconnected, rejoin channels
+						h.Rejoin()
+					}
 				} else {
 					log.Println("Disconnected from IRC")
 					break
@@ -119,12 +145,20 @@ func (h *IrcSubSystem) Run() {
 			if len(cm.To) == 0 {
 				h.client.Privmsg(h.ircchannel, cm.Msg)
 			} else {
-				for _, to := range cm.To {
-					recv := to
-					if strings.Index(recv, "!") > 0 {
-						recv = recv[0:strings.Index(recv, "!")]
+				for _, recv := range cm.To {
+					if recv == "#*" {
+						// special: send to all joined channels
+						for _, to := range h.channels {
+							h.client.Privmsg(to, cm.Msg)
+						}
+					} else {
+						// needs stripping hostname when sending to user!host
+						if strings.Index(recv, "!") > 0 {
+							recv = recv[0:strings.Index(recv, "!")]
+						}
+
+						h.client.Privmsg(recv, cm.Msg)
 					}
-					h.client.Privmsg(recv, cm.Msg)
 				}
 			}
 		}
