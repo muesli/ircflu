@@ -146,11 +146,9 @@ func (h *IrcSubSystem) Run() {
 				h.client.Privmsg(h.ircchannel, cm.Msg)
 			} else {
 				for _, recv := range cm.To {
-					fmt.Println("Channel-to:", recv)
 					if recv == "#*" {
 						// special: send to all joined channels
 						for _, to := range h.channels {
-							fmt.Println("Sending:", to, cm.Msg)
 							h.client.Privmsg(to, cm.Msg)
 						}
 					} else {

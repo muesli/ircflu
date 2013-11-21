@@ -47,6 +47,7 @@ from your favorite shell script or a terminal:
 
     echo "This will be sent to the default channel on IRC." | netcat -q0 127.0.0.1 12345
     echo "#somechannel This will be sent to a specific channel on IRC." | netcat -q0 127.0.0.1 12345
+    echo "#* This will be sent to all joined IRC channels." | netcat -q0 127.0.0.1 12345
     echo "@someuser This will be sent to a specific user on IRC." | netcat -q0 127.0.0.1 12345
 
 ## Remote controlling ircflu
