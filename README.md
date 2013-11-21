@@ -43,9 +43,11 @@ Run ircflu -help to see a full list of options!
 
 When started with its default options, ircflu will listen for incoming
 connections on TCP port 12345. You can now send messages to an IRC channel
-from your favorite shell script or any terminal:
+from your favorite shell script or a terminal:
 
-    echo "This will be sent to IRC." | netcat -q0 127.0.0.1 12345
+    echo "This will be sent to the default channel on IRC." | netcat -q0 127.0.0.1 12345
+    echo "#somechannel This will be sent to a specific channel on IRC." | netcat -q0 127.0.0.1 12345
+    echo "@someuser This will be sent to a specific user on IRC." | netcat -q0 127.0.0.1 12345
 
 ## Integrated web hooks support
 
