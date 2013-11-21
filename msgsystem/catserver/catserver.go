@@ -18,7 +18,7 @@ type CatSubSystem struct {
 	catfam  string
 }
 
-func (h *CatSubSystem) Name() string {
+func (sys *CatSubSystem) Name() string {
 	return "catserver"
 }
 
@@ -106,9 +106,9 @@ func ParseFirstLine(str string) ([]string, string) {
 	return parts, rest
 }
 
-func (h *CatSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
+func (sys *CatSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 	// Listen on catport:
-	go CatportServer(channelIn, h.catfam, h.catbind)
+	go CatportServer(channelIn, sys.catfam, sys.catbind)
 }
 
 func init() {

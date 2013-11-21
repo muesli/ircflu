@@ -24,19 +24,19 @@ func init() {
 	hooks.RegisterWebHook(&GitHubHook{name: "GitHub", path: "/github"})
 }
 
-func (h *GitHubHook) Name() string {
-	return h.name
+func (hook *GitHubHook) Name() string {
+	return hook.name
 }
 
-func (h *GitHubHook) Path() string {
-	return h.path
+func (hook *GitHubHook) Path() string {
+	return hook.path
 }
 
-func (h *GitHubHook) SetMessageChan(channel chan msgsystem.Message) {
-	h.messages = channel
+func (hook *GitHubHook) SetMessageChan(channel chan msgsystem.Message) {
+	hook.messages = channel
 }
 
-func (h *GitHubHook) Request(ctx *web.Context) {
+func (hook *GitHubHook) Request(ctx *web.Context) {
 	payloadString, ok := ctx.Params["payload"]
 	if !ok {
 		fmt.Println("Couldn't find GitHub payload!")
@@ -95,9 +95,9 @@ func (h *GitHubHook) Request(ctx *web.Context) {
 	msg := msgsystem.Message{
 		Msg: fmt.Sprintf("[%s] %s pushed %s new %s to %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(user, "teal"), irctools.Bold(strconv.Itoa(commitCount)), commitToken, irctools.Colored(ref, "purple"), url),
 	}
-	h.messages <- msg
+	hook.messages <- msg
 
 	for _, m := range ircmsgs {
-		h.messages <- m
+		hook.messages <- m
 	}
 }

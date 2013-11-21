@@ -25,19 +25,19 @@ func init() {
 	hooks.RegisterWebHook(&GitLabHook{name: "GitLab", path: "/gitlab"})
 }
 
-func (h *GitLabHook) Name() string {
-	return h.name
+func (hook *GitLabHook) Name() string {
+	return hook.name
 }
 
-func (h *GitLabHook) Path() string {
-	return h.path
+func (hook *GitLabHook) Path() string {
+	return hook.path
 }
 
-func (h *GitLabHook) SetMessageChan(channel chan msgsystem.Message) {
-	h.messages = channel
+func (hook *GitLabHook) SetMessageChan(channel chan msgsystem.Message) {
+	hook.messages = channel
 }
 
-func (h *GitLabHook) Request(ctx *web.Context) {
+func (hook *GitLabHook) Request(ctx *web.Context) {
 	b, err := ioutil.ReadAll(ctx.Request.Body)
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -74,7 +74,7 @@ func (h *GitLabHook) Request(ctx *web.Context) {
 	ircmsg := msgsystem.Message{
 		Msg: fmt.Sprintf("[%s] %s pushed %s new %s to %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(user, "teal"), irctools.Bold(strconv.Itoa(commitCount)), commitToken, irctools.Colored(ref, "purple"), url),
 	}
-	h.messages <- ircmsg
+	hook.messages <- ircmsg
 
 	for _, c := range commitData {
 		commit := c.(map[string]interface{})
@@ -87,6 +87,6 @@ func (h *GitLabHook) Request(ctx *web.Context) {
 		ircmsg := msgsystem.Message{
 			Msg: fmt.Sprintf("%s/%s %s %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(ref, "purple"), irctools.Colored(commitId[:8], "grey"), irctools.Colored(user, "teal"), message),
 		}
-		h.messages <- ircmsg
+		hook.messages <- ircmsg
 	}
 }

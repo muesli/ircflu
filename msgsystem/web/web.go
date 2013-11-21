@@ -11,12 +11,12 @@ type WebSubSystem struct {
 	addr string
 }
 
-func (h *WebSubSystem) Name() string {
+func (sys *WebSubSystem) Name() string {
 	return "web"
 }
 
-func (h *WebSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
-	go web.Run(h.addr)
+func (sys *WebSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
+	go web.Run(sys.addr)
 }
 
 func init() {
