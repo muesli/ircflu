@@ -35,7 +35,7 @@ Now we can build ircflu:
 
 To run the application you will need to specify a few parameters:
 
-    ./ircflu -ircnick="somenickname" -irchost="some.server:6667" -ircchannel="#yourircchannel" -authpassword "yourpassword"
+    ./ircflu -irchost="some.server:6667" -ircchannel="#ircflu" -authpassword "some_password"
 
 Run ircflu -help to see a full list of options!
 
@@ -63,7 +63,7 @@ output to IRC.
 
 To authenticate with ircflu, use the auth command in a private query with it:
 
-    !auth [your_authpassword]
+    !auth [your_auth_password]
 
 Once you're authed, you can execute a command on ircflu's host:
 
