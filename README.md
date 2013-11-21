@@ -49,12 +49,6 @@ from your favorite shell script or a terminal:
     echo "#somechannel This will be sent to a specific channel on IRC." | netcat -q0 127.0.0.1 12345
     echo "@someuser This will be sent to a specific user on IRC." | netcat -q0 127.0.0.1 12345
 
-## Integrated web hooks support
-
-ircflu also runs an integrated HTTP server on port 12346, processing incoming
-GitHub (on /github) & GitLab (on /gitlab) web-hook calls which are triggered
-by a commit to your git repository. ircflu will in turn notify you on IRC.
-
 ## Remote controlling ircflu
 
 It comes with a simplistic authentication system (!auth), supports aliases for
@@ -78,6 +72,19 @@ Here's how you can create and use aliases:
 
     !alias deploy = exec ssh myserver ~/deploy.sh
     !deploy
+
+## Integrated web hooks support
+
+ircflu also runs an integrated HTTP server on port 12346, processing incoming
+GitHub (on /github) & GitLab (on /gitlab) web-hook calls which are triggered
+by a commit to your git repository.
+
+To connect GitHub with ircflu, go to your repository's settings page, click on
+'Service Hooks' and then pick 'WebHook URLs' from the list. Add a new web-hook
+here, e.g.: 'http://your.ircflu.host:12346/github'
+
+Whenever you push something to your repository now, ircflu will post a nice
+little summary of your changes on IRC.
 
 More soon!
 
