@@ -87,6 +87,8 @@ here, e.g.: 'http://your.ircflu.host:12346/github'
 Whenever you push something to your repository now, ircflu will post a nice
 little summary of your changes on IRC.
 
-More soon!
+## Development
+
+API docs can be found [here](http://godoc.org/github.com/muesli/ircflu).
 
 Continous integration: [![Build Status](https://secure.travis-ci.org/muesli/ircflu.png)](http://travis-ci.org/muesli/ircflu)
