@@ -4,19 +4,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/hoisie/web"
-	"github.com/muesli/ircflu/msgsystem/web/hooks"
 	"github.com/muesli/ircflu/msgsystem"
 	"github.com/muesli/ircflu/msgsystem/irc/irctools"
+	"github.com/muesli/ircflu/msgsystem/web/hooks"
 	"strconv"
 	"strings"
 )
 
-var (
-)
+var ()
 
 type GitHubHook struct {
-	name string
-	path string
+	name     string
+	path     string
 	messages chan msgsystem.Message
 }
 

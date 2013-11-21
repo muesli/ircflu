@@ -1,18 +1,18 @@
 package irc
 
 import (
-	irc "github.com/fluffle/goirc/client"
 	"fmt"
-	"log"
-	"strings"
-	"time"
+	irc "github.com/fluffle/goirc/client"
 	"github.com/muesli/ircflu/app"
 	"github.com/muesli/ircflu/auth"
 	"github.com/muesli/ircflu/msgsystem"
+	"log"
+	"strings"
+	"time"
 )
 
 type IrcSubSystem struct {
-	messagesIn chan msgsystem.Message
+	messagesIn  chan msgsystem.Message
 	messagesOut chan msgsystem.Message
 
 	// channel signaling irc connection status
@@ -80,8 +80,8 @@ func (h *IrcSubSystem) Run() {
 		}
 
 		msg := msgsystem.Message{
-			To: []string{channel},
-			Msg: line.Args[1],
+			To:     []string{channel},
+			Msg:    line.Args[1],
 			Source: line.Src,
 			Authed: auth.IsAuthed(line.Src),
 		}
@@ -139,7 +139,7 @@ func init() {
 		app.CliFlag{&irc.ircnick, "ircnick", "ircflu", "Nickname to use for IRC"},
 		app.CliFlag{&irc.ircpassword, "ircpassword", "", "Password to use to connect to IRC server"},
 		app.CliFlag{&irc.ircchannel, "ircchannel", "#ircflutest", "Which channel to join"},
-	//	app.CliFlag{&irc.ircssl, "ircssl", false, "Use SSL for IRC connection"},
+		//	app.CliFlag{&irc.ircssl, "ircssl", false, "Use SSL for IRC connection"},
 	})
 
 	msgsystem.RegisterSubSystem(&irc)

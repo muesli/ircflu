@@ -27,5 +27,5 @@ func main() {
 	msgsystem.StartSubSystems()
 
 	ch := make(chan bool)
-	<- ch
+	<-ch
 }

@@ -16,14 +16,14 @@ type MsgSubSystem interface {
 }
 
 type Message struct {
-	To  []string
-	Msg string
+	To     []string
+	Msg    string
 	Source string
 	Authed bool
 }
 
 var (
-	CommandsIn = make(chan Message)
+	CommandsIn  = make(chan Message)
 	MessagesOut = make(chan Message)
 
 	subsystems map[string]*MsgSubSystem = make(map[string]*MsgSubSystem)

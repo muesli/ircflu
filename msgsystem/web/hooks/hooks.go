@@ -2,10 +2,10 @@ package hooks
 
 import (
 	"fmt"
-	_ "strings"
-	_ "time"
 	"github.com/hoisie/web"
 	"github.com/muesli/ircflu/msgsystem"
+	_ "strings"
+	_ "time"
 )
 
 var (

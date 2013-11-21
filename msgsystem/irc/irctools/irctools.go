@@ -1,34 +1,34 @@
 package irctools
 
 import (
-	"net"
 	"fmt"
+	"net"
 )
 
 func PostToIrcFlu(host string, channel string, val string) {
-        addr, err := net.ResolveTCPAddr("tcp", host)
-        if err != nil {
-                fmt.Println("Error:", err)
-                return
-        }
+	addr, err := net.ResolveTCPAddr("tcp", host)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
 
-        conn, err := net.DialTCP("tcp", nil, addr)
-        if err != nil {
-                fmt.Println("Error:", err)
-                return
-        }
-        defer conn.Close()
+	conn, err := net.DialTCP("tcp", nil, addr)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	defer conn.Close()
 
-        if len(channel) > 0 {
-            val = channel + " " + val
-        }
-        _, err = conn.Write([]byte(val))
-        if err != nil {
-                fmt.Println("Error:", err)
-                return
-        }
+	if len(channel) > 0 {
+		val = channel + " " + val
+	}
+	_, err = conn.Write([]byte(val))
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
 
-        _, err = conn.Write([]byte("\n"))
+	_, err = conn.Write([]byte("\n"))
 }
 
 func Bold(val string) string {

@@ -2,15 +2,15 @@ package partCmd
 
 import (
 	"fmt"
-	_ "log"
-	"strings"
 	"github.com/muesli/ircflu/commands"
 	"github.com/muesli/ircflu/msgsystem"
 	"github.com/muesli/ircflu/msgsystem/irc"
+	_ "log"
+	"strings"
 )
 
 type PartCommand struct {
-	messagesIn chan msgsystem.Message
+	messagesIn  chan msgsystem.Message
 	messagesOut chan msgsystem.Message
 }
 
@@ -41,31 +41,31 @@ func (h *PartCommand) Parse(msg msgsystem.Message) bool {
 	params := strings.Join(m[1:], " ")
 
 	switch cmd {
-		case "!part":
-			if !msg.Authed {
-				r := msgsystem.Message{
-					To: channel,
-					Msg: "Security breach. Talk to ircflu admin!",
-				}
-				h.messagesOut <- r
-				return true
+	case "!part":
+		if !msg.Authed {
+			r := msgsystem.Message{
+				To:  channel,
+				Msg: "Security breach. Talk to ircflu admin!",
 			}
-
-			if len(params) > 0 {
-				fmt.Println("Parting:", params)
-
-				ircclient := (*msgsystem.SubSystem("irc")).(*irc.IrcSubSystem)
-				if ircclient != nil {
-					ircclient.Part(params)
-				}
-			} else {
-				r := msgsystem.Message{
-					To: channel,
-					Msg: "Usage: !part #chan",
-				}
-				h.messagesOut <- r
-			}
+			h.messagesOut <- r
 			return true
+		}
+
+		if len(params) > 0 {
+			fmt.Println("Parting:", params)
+
+			ircclient := (*msgsystem.SubSystem("irc")).(*irc.IrcSubSystem)
+			if ircclient != nil {
+				ircclient.Part(params)
+			}
+		} else {
+			r := msgsystem.Message{
+				To:  channel,
+				Msg: "Usage: !part #chan",
+			}
+			h.messagesOut <- r
+		}
+		return true
 	}
 	return false
 }

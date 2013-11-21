@@ -5,10 +5,10 @@ import (
 )
 
 type CliFlag struct {
-	V			interface{}
-	Name		string
-	Value		string
-	Desc		string
+	V     interface{}
+	Name  string
+	Value string
+	Desc  string
 }
 
 var (

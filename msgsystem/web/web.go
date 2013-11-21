@@ -7,7 +7,7 @@ import (
 )
 
 type WebSubSystem struct {
-	messagesIn chan msgsystem.Message
+	messagesIn  chan msgsystem.Message
 	messagesOut chan msgsystem.Message
 
 	addr string

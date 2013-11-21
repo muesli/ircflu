@@ -23,12 +23,12 @@ var (
 func init() {
 	fmt.Println("Initializing command parsers...")
 
-	go func(){
+	go func() {
 		for {
 			msg := <-msgsystem.CommandsIn
 			fmt.Println("Commands:", msg.To, msg.Msg)
 
-			go func(){
+			go func() {
 				for _, c := range commands {
 					fmt.Println("Handing out to:", (*c).Name(), (*c).Parse(msg))
 				}
