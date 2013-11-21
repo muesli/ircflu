@@ -33,7 +33,7 @@ Now we can build ircflu:
     cd ircflu
     go build
 
-To run the application you will need to specify a few options:
+To run the application you will need to specify a few parameters:
 
     ./ircflu -ircnick="somenickname" -irchost="some.server:6667" -ircchannel="#yourircchannel" -authpassword "yourpassword"
 
