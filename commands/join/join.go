@@ -15,24 +15,24 @@ type JoinCommand struct {
 	messagesOut chan msgsystem.Message
 }
 
-func (h *JoinCommand) Name() string {
+func (cmd *JoinCommand) Name() string {
 	return "join"
 }
 
-func (h *JoinCommand) Parse(msg msgsystem.Message) bool {
+func (cmd *JoinCommand) Parse(msg msgsystem.Message) bool {
 	channel := msg.To
 	m := strings.Split(msg.Msg, " ")
-	cmd := m[0]
+	command := m[0]
 	params := strings.Join(m[1:], " ")
 
-	switch cmd {
+	switch command {
 	case "!join":
 		if !msg.Authed {
 			r := msgsystem.Message{
 				To:  channel,
 				Msg: "Security breach. Talk to ircflu admin!",
 			}
-			h.messagesOut <- r
+			cmd.messagesOut <- r
 			return true
 		}
 
@@ -48,16 +48,16 @@ func (h *JoinCommand) Parse(msg msgsystem.Message) bool {
 				To:  channel,
 				Msg: "Usage: !join #chan  or  !join #chan key",
 			}
-			h.messagesOut <- r
+			cmd.messagesOut <- r
 		}
 		return true
 	}
 	return false
 }
 
-func (h *JoinCommand) Run(channelIn, channelOut chan msgsystem.Message) {
-	h.messagesIn = channelIn
-	h.messagesOut = channelOut
+func (cmd *JoinCommand) Run(channelIn, channelOut chan msgsystem.Message) {
+	cmd.messagesIn = channelIn
+	cmd.messagesOut = channelOut
 }
 
 func init() {

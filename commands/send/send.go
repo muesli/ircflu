@@ -14,39 +14,39 @@ type SendCommand struct {
 	messagesOut chan msgsystem.Message
 }
 
-func (h *SendCommand) Name() string {
+func (cmd *SendCommand) Name() string {
 	return "send"
 }
 
-func (h *SendCommand) Parse(msg msgsystem.Message) bool {
+func (cmd *SendCommand) Parse(msg msgsystem.Message) bool {
 	channel := msg.To
 	m := strings.Split(msg.Msg, " ")
-	cmd := m[0]
+	command := m[0]
 	params := strings.Join(m[1:], " ")
 
-	switch cmd {
+	switch command {
 	case "!send":
 		if len(params) > 0 {
 			r := msgsystem.Message{
 				To:  channel,
 				Msg: params,
 			}
-			h.messagesOut <- r
+			cmd.messagesOut <- r
 		} else {
 			r := msgsystem.Message{
 				To:  channel,
 				Msg: "Usage: !send text",
 			}
-			h.messagesOut <- r
+			cmd.messagesOut <- r
 		}
 		return true
 	}
 	return false
 }
 
-func (h *SendCommand) Run(channelIn, channelOut chan msgsystem.Message) {
-	h.messagesIn = channelIn
-	h.messagesOut = channelOut
+func (cmd *SendCommand) Run(channelIn, channelOut chan msgsystem.Message) {
+	cmd.messagesIn = channelIn
+	cmd.messagesOut = channelOut
 }
 
 func init() {

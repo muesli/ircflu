@@ -1,4 +1,4 @@
-// The alias command lets you setup shortcuts to lengthy commands.
+// The alias command lets you create shortcuts to lengthy commands.
 package aliasCmd
 
 import (
@@ -17,24 +17,24 @@ type AliasCommand struct {
 	aliases map[string]string
 }
 
-func (h *AliasCommand) Name() string {
+func (cmd *AliasCommand) Name() string {
 	return "alias"
 }
 
-func (h *AliasCommand) Parse(msg msgsystem.Message) bool {
+func (cmd *AliasCommand) Parse(msg msgsystem.Message) bool {
 	channel := msg.To
 	m := strings.Split(msg.Msg, " ")
-	cmd := m[0]
+	command := m[0]
 	params := strings.Join(m[1:], " ")
 
-	switch cmd {
+	switch command {
 	case "!alias":
 		if !msg.Authed {
 			r := msgsystem.Message{
 				To:  channel,
 				Msg: "Security breach. Talk to ircflu admin!",
 			}
-			h.messagesOut <- r
+			cmd.messagesOut <- r
 			return true
 		}
 
@@ -42,29 +42,29 @@ func (h *AliasCommand) Parse(msg msgsystem.Message) bool {
 		if len(a) == 2 {
 			a[0] = strings.TrimSpace(a[0])
 			a[1] = strings.TrimSpace(a[1])
-			h.aliases[a[0]] = a[1]
+			cmd.aliases[a[0]] = a[1]
 			r := msgsystem.Message{
 				To:  channel,
 				Msg: "Added new alias '" + a[0] + "' for command '" + a[1] + "'",
 			}
-			h.messagesOut <- r
+			cmd.messagesOut <- r
 		} else {
 			r := msgsystem.Message{
 				To:  channel,
 				Msg: "Usage: !alias [new command] = [actual command]",
 			}
-			h.messagesOut <- r
+			cmd.messagesOut <- r
 
-			for k, v := range h.aliases {
+			for k, v := range cmd.aliases {
 				r.Msg = "Alias: " + irctools.Colored(k, "red") + " = " + irctools.Colored(v, "teal")
-				h.messagesOut <- r
+				cmd.messagesOut <- r
 			}
 		}
 
 		return true
 
 	default:
-		v, ok := h.aliases[strings.TrimSpace(msg.Msg)[1:]]
+		v, ok := cmd.aliases[strings.TrimSpace(msg.Msg)[1:]]
 		if ok {
 			fmt.Println("Alias:", v, strings.TrimSpace(msg.Msg), ok)
 			r := msgsystem.Message{
@@ -73,7 +73,7 @@ func (h *AliasCommand) Parse(msg msgsystem.Message) bool {
 				Authed: msg.Authed,
 				Msg:    "!" + v,
 			}
-			h.messagesIn <- r
+			cmd.messagesIn <- r
 
 			return true
 		}
@@ -82,9 +82,9 @@ func (h *AliasCommand) Parse(msg msgsystem.Message) bool {
 	return false
 }
 
-func (h *AliasCommand) Run(channelIn, channelOut chan msgsystem.Message) {
-	h.messagesIn = channelIn
-	h.messagesOut = channelOut
+func (cmd *AliasCommand) Run(channelIn, channelOut chan msgsystem.Message) {
+	cmd.messagesIn = channelIn
+	cmd.messagesOut = channelOut
 }
 
 func init() {

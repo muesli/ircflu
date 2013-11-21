@@ -16,24 +16,24 @@ type ExecCommand struct {
 	messagesOut chan msgsystem.Message
 }
 
-func (h *ExecCommand) Name() string {
+func (cmd *ExecCommand) Name() string {
 	return "exec"
 }
 
-func (h *ExecCommand) Parse(msg msgsystem.Message) bool {
+func (cmd *ExecCommand) Parse(msg msgsystem.Message) bool {
 	channel := msg.To
 	m := strings.Split(msg.Msg, " ")
-	cmd := m[0]
+	command := m[0]
 	params := strings.TrimSpace(strings.Join(m[1:], " "))
 
-	switch cmd {
+	switch command {
 	case "!exec":
 		if !msg.Authed || strings.Index(params, "rm ") >= 0 || strings.Index(params, "mv ") >= 0 {
 			r := msgsystem.Message{
 				To:  channel,
 				Msg: "Security breach. Talk to ircflu admin!",
 			}
-			h.messagesOut <- r
+			cmd.messagesOut <- r
 			return true
 		}
 
@@ -42,7 +42,7 @@ func (h *ExecCommand) Parse(msg msgsystem.Message) bool {
 				To:  channel,
 				Msg: irctools.Colored("Executing command!", "red"),
 			}
-			h.messagesOut <- r
+			cmd.messagesOut <- r
 
 			c := strings.Split(params, " ")
 			e := exec.Command(c[0], c[1:]...)
@@ -59,13 +59,13 @@ func (h *ExecCommand) Parse(msg msgsystem.Message) bool {
 				r.Msg = "Command '" + params + "' succeeded!"
 			}
 
-			h.messagesOut <- r
+			cmd.messagesOut <- r
 		} else {
 			r := msgsystem.Message{
 				To:  channel,
 				Msg: "Usage: !exec [command]",
 			}
-			h.messagesOut <- r
+			cmd.messagesOut <- r
 		}
 
 		return true
@@ -74,9 +74,9 @@ func (h *ExecCommand) Parse(msg msgsystem.Message) bool {
 	return false
 }
 
-func (h *ExecCommand) Run(channelIn, channelOut chan msgsystem.Message) {
-	h.messagesIn = channelIn
-	h.messagesOut = channelOut
+func (cmd *ExecCommand) Run(channelIn, channelOut chan msgsystem.Message) {
+	cmd.messagesIn = channelIn
+	cmd.messagesOut = channelOut
 }
 
 func init() {

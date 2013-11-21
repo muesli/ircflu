@@ -15,24 +15,24 @@ type PartCommand struct {
 	messagesOut chan msgsystem.Message
 }
 
-func (h *PartCommand) Name() string {
+func (cmd *PartCommand) Name() string {
 	return "part"
 }
 
-func (h *PartCommand) Parse(msg msgsystem.Message) bool {
+func (cmd *PartCommand) Parse(msg msgsystem.Message) bool {
 	channel := msg.To
 	m := strings.Split(msg.Msg, " ")
-	cmd := m[0]
+	command := m[0]
 	params := strings.Join(m[1:], " ")
 
-	switch cmd {
+	switch command {
 	case "!part":
 		if !msg.Authed {
 			r := msgsystem.Message{
 				To:  channel,
 				Msg: "Security breach. Talk to ircflu admin!",
 			}
-			h.messagesOut <- r
+			cmd.messagesOut <- r
 			return true
 		}
 
@@ -48,16 +48,16 @@ func (h *PartCommand) Parse(msg msgsystem.Message) bool {
 				To:  channel,
 				Msg: "Usage: !part #chan",
 			}
-			h.messagesOut <- r
+			cmd.messagesOut <- r
 		}
 		return true
 	}
 	return false
 }
 
-func (h *PartCommand) Run(channelIn, channelOut chan msgsystem.Message) {
-	h.messagesIn = channelIn
-	h.messagesOut = channelOut
+func (cmd *PartCommand) Run(channelIn, channelOut chan msgsystem.Message) {
+	cmd.messagesIn = channelIn
+	cmd.messagesOut = channelOut
 }
 
 func init() {
