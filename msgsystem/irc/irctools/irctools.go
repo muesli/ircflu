@@ -25,6 +25,7 @@ func PostToIrcFlu(host string, val string) {
                 return
         }
 
+        _, err = conn.Write([]byte("\n"))
         conn.Close()
 }
 
