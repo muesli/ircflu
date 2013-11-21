@@ -35,7 +35,7 @@ Now we can build ircflu:
 
 To run the application you will need to specify a few parameters:
 
-    ./ircflu -irchost="some.server:6667" -ircchannel="#ircflu" -authpassword "some_password"
+    ./ircflu -irchost="some.server:6667" -ircchannel="#ircflu" -authpassword="some_password"
 
 Run ircflu -help to see a full list of options!
 
