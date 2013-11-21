@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func PostToIrcFlu(host string, val string) {
+func PostToIrcFlu(host string, channel string, val string) {
         addr, err := net.ResolveTCPAddr("tcp", host)
         if err != nil {
                 fmt.Println("Error:", err)
@@ -19,6 +19,9 @@ func PostToIrcFlu(host string, val string) {
         }
         defer conn.Close()
 
+        if len(channel) > 0 {
+            val = channel + " " + val
+        }
         _, err = conn.Write([]byte(val))
         if err != nil {
                 fmt.Println("Error:", err)
