@@ -96,17 +96,17 @@ func (sys *IrcSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 	// loop on IRC dis/connected events
 	go func() {
 		for {
-			log.Println("Connecting to IRC...")
+			log.Println("Connecting to IRC:", sys.irchost)
 			err := sys.client.Connect(sys.irchost, sys.ircpassword)
 			if err != nil {
-				log.Println("Failed to connect to IRC")
+				log.Println("Failed to connect to IRC:", sys.irchost)
 				log.Println(err)
 				continue
 			}
 			for {
 				status := <-sys.ConnectedState
 				if status {
-					log.Println("Connected to IRC")
+					log.Println("Connected to IRC:", sys.irchost)
 
 					if len(sys.channels) == 0 {
 						// join default channel
@@ -116,7 +116,7 @@ func (sys *IrcSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 						sys.Rejoin()
 					}
 				} else {
-					log.Println("Disconnected from IRC")
+					log.Println("Disconnected from IRC:", sys.irchost)
 					break
 				}
 			}

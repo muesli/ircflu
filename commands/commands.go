@@ -45,12 +45,14 @@ func init() {
 	}()
 }
 
+// Commands need to call this method to register themselves
 func RegisterCommand(command Command) {
 //	fmt.Println("Registering command:", command.Name())
 
 	commands[command.Name()] = &command
 }
 
+// Returns command with this name
 func GetCommand(identifier string) *Command {
 	command, ok := commands[identifier]
 	if ok {
@@ -60,11 +62,13 @@ func GetCommand(identifier string) *Command {
 	return nil
 }
 
+// Returns true when command with this name is enabled
 func IsCommandEnabled(name string) bool {
 	_, ok := enabledCommands[name]
 	return ok
 }
 
+// Starts all enabled commands
 func StartCommands() {
 	cmds := strings.Split(activateCommands, ",")
 	for _, cmdName := range cmds {

@@ -6,8 +6,11 @@ import (
 	"fmt"
 )
 
+// Interface which all messaging sub-systems need to implement
 type MsgSubSystem interface {
+	// Name of the sub-system
 	Name() string
+	// Activate the sub-system using these in&out channels
 	Run(channelIn, channelOut chan Message)
 }
 
@@ -29,13 +32,15 @@ func init() {
 	fmt.Println("Initializing messaging subsystem...")
 }
 
+// Sub-systems need to call this method to register themselves
 func RegisterSubSystem(system MsgSubSystem) {
 	fmt.Println("Registering msg-subsystem:", system.Name())
 
 	subsystems[system.Name()] = &system
 }
 
-func SubSystem(identifier string) *MsgSubSystem {
+// Returns sub-system with this name
+func GetSubSystem(identifier string) *MsgSubSystem {
 	system, ok := subsystems[identifier]
 	if ok {
 		return system
@@ -44,6 +49,7 @@ func SubSystem(identifier string) *MsgSubSystem {
 	return nil
 }
 
+// Starts all registered messaging sub-systems
 func StartSubSystems() {
 	for _, system := range subsystems {
 		(*system).Run(CommandsIn, MessagesOut)

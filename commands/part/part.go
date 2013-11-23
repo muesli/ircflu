@@ -39,7 +39,7 @@ func (cmd *PartCommand) Parse(msg msgsystem.Message) bool {
 		if len(params) > 0 {
 			fmt.Println("Parting:", params)
 
-			ircclient := (*msgsystem.SubSystem("irc")).(*irc.IrcSubSystem)
+			ircclient := (*msgsystem.GetSubSystem("irc")).(*irc.IrcSubSystem)
 			if ircclient != nil {
 				ircclient.Part(params)
 			}

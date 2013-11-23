@@ -39,7 +39,7 @@ func (cmd *JoinCommand) Parse(msg msgsystem.Message) bool {
 		if len(params) > 0 {
 			fmt.Println("Joining:", params)
 
-			ircclient := (*msgsystem.SubSystem("irc")).(*irc.IrcSubSystem)
+			ircclient := (*msgsystem.GetSubSystem("irc")).(*irc.IrcSubSystem)
 			if ircclient != nil {
 				ircclient.Join(params)
 			}

@@ -24,10 +24,14 @@ import (
 )
 
 func main() {
+	// Parse command-line args for all registered sub modules
 	app.Run()
+
+	// Initialize commands and messaging sub-systems
 	commands.StartCommands()
 	msgsystem.StartSubSystems()
 
+	// Keep app alive
 	ch := make(chan bool)
 	<-ch
 }
