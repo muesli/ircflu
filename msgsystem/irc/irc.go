@@ -58,6 +58,10 @@ func (sys *IrcSubSystem) Part(channel string) {
 }
 
 func (sys *IrcSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
+	if len(sys.irchost) == 0 {
+		return
+	}
+
 	// channel signaling irc connection status
 	sys.ConnectedState = make(chan bool)
 
@@ -151,7 +155,7 @@ func init() {
 	irc := IrcSubSystem{}
 
 	app.AddFlags([]app.CliFlag{
-		app.CliFlag{&irc.irchost, "irchost", "localhost:6667", "Hostname of IRC server, eg: irc.example.org:6667"},
+		app.CliFlag{&irc.irchost, "irchost", "", "Hostname of IRC server, eg: irc.example.org:6667"},
 		app.CliFlag{&irc.ircnick, "ircnick", "ircflu", "Nickname to use for IRC"},
 		app.CliFlag{&irc.ircpassword, "ircpassword", "", "Password to use to connect to IRC server"},
 		app.CliFlag{&irc.ircchannel, "ircchannel", "#ircflutest", "Which channel to join"},
