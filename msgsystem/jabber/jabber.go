@@ -47,27 +47,29 @@ func (sys *JabberSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 			}
 			switch v := chat.(type) {
 				case xmpp.Chat:
-					fmt.Println(v.Remote, v.Text)
+					if len(v.Text) > 0 {
+						fmt.Println(v.Remote, v.Text)
 
-					msg := msgsystem.Message{
-						To:     []string{sys.username},
-						Msg:    v.Text,
-						Source: v.Remote,
-						Authed: auth.IsAuthed(v.Remote),
+						msg := msgsystem.Message{
+	//						To:     []string{sys.username},
+							Msg:    v.Text,
+							Source: v.Remote,
+							Authed: auth.IsAuthed(v.Remote),
+						}
+						channelIn <- msg
 					}
-					channelIn <- msg
 				case xmpp.Presence:
-//					fmt.Println(v.From, v.Show)
+					fmt.Println(v.From, v.Show)
 			}
 		}
 	}()
 
-	go func() {
+/*	go func() {
 		for {
 			cm := <-channelOut
 			fmt.Println("Sending:", cm.To, cm.Msg)
 		}
-	}()
+	}()*/
 }
 
 func init() {

@@ -31,6 +31,11 @@ func init() {
 	go func() {
 		for {
 			msg := <-msgsystem.CommandsIn
+			if len(strings.TrimSpace(msg.Msg)) == 0 {
+				fmt.Println("Received empty message. Discarding!")
+				continue
+			}
+
 			fmt.Println("Commands:", msg.To, msg.Msg)
 
 			go func() {
