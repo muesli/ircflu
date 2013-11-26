@@ -2,7 +2,7 @@
 package irc
 
 import (
-	"fmt"
+	_ "fmt"
 	irc "github.com/fluffle/goirc/client"
 	"github.com/muesli/ircflu/app"
 	"github.com/muesli/ircflu/auth"
@@ -123,32 +123,33 @@ func (sys *IrcSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 			time.Sleep(5 * time.Second)
 		}
 	}()
+}
 
-	go func() {
-		for {
-			cm := <-channelOut
-			fmt.Println("Sending:", cm.To, cm.Msg)
-			if len(cm.To) == 0 {
-				sys.client.Privmsg(sys.ircchannel, cm.Msg)
-			} else {
-				for _, recv := range cm.To {
-					if recv == "#*" {
-						// special: send to all joined channels
-						for _, to := range sys.channels {
-							sys.client.Privmsg(to, cm.Msg)
-						}
-					} else {
-						// needs stripping hostname when sending to user!host
-						if strings.Index(recv, "!") > 0 {
-							recv = recv[0:strings.Index(recv, "!")]
-						}
-
-						sys.client.Privmsg(recv, cm.Msg)
-					}
+func (sys *IrcSubSystem) Handle(cm msgsystem.Message) bool {
+	if len(cm.To) == 0 {
+		sys.client.Privmsg(sys.ircchannel, cm.Msg)
+		return true
+	} else {
+		for _, recv := range cm.To {
+			if recv == "*" {
+				// special: send to all joined channels
+				for _, to := range sys.channels {
+					sys.client.Privmsg(to, cm.Msg)
 				}
+			} else {
+				// needs stripping hostname when sending to user!host
+				if strings.Index(recv, "!") > 0 {
+					recv = recv[0:strings.Index(recv, "!")]
+				}
+
+				sys.client.Privmsg(recv, cm.Msg)
 			}
 		}
-	}()
+
+		return true
+	}
+
+	return false
 }
 
 func init() {

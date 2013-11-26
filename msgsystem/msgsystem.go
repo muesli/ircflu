@@ -4,6 +4,7 @@ package msgsystem
 
 import (
 	"fmt"
+	"strings"
 )
 
 // Interface which all messaging sub-systems need to implement
@@ -12,6 +13,7 @@ type MsgSubSystem interface {
 	Name() string
 	// Activate the sub-system using these in&out channels
 	Run(channelIn, channelOut chan Message)
+	Handle(msg Message) bool
 }
 
 type Message struct {
@@ -30,6 +32,26 @@ var (
 
 func init() {
 	fmt.Println("Initializing messaging subsystem...")
+
+	go func() {
+		for {
+			msg := <-MessagesOut
+			if len(strings.TrimSpace(msg.Msg)) == 0 {
+				fmt.Println("Trying to send empty message. Discarding!")
+				continue
+			}
+
+			fmt.Println("Message:", msg.To, msg.Msg)
+
+			go func() {
+				for _, s := range subsystems {
+					if (*s).Handle(msg) {
+						fmt.Println((*s).Name(), "sub-system sending:", msg.To, msg.Msg)
+					}
+				}
+			}()
+		}
+	}()
 }
 
 // Sub-systems need to call this method to register themselves

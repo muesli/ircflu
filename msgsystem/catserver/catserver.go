@@ -111,6 +111,10 @@ func (sys *CatSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 	go CatportServer(channelIn, sys.catfam, sys.catbind)
 }
 
+func (sys *CatSubSystem) Handle(cm msgsystem.Message) bool {
+	return false
+}
+
 func init() {
 	cat := CatSubSystem{}
 

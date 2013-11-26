@@ -8,6 +8,7 @@ import (
 	"github.com/muesli/ircflu/auth"
 	"github.com/muesli/ircflu/msgsystem"
 	"log"
+	"strings"
 )
 
 type JabberSubSystem struct {
@@ -63,13 +64,26 @@ func (sys *JabberSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 			}
 		}
 	}()
+}
 
-/*	go func() {
-		for {
-			cm := <-channelOut
-			fmt.Println("Sending:", cm.To, cm.Msg)
+func (sys *JabberSubSystem) Handle(cm msgsystem.Message) bool {
+	for _, recv := range cm.To {
+		if recv == "*" {
+			// special: send to all joined channels
+//			for _, to := range sys.channels {
+				//sys.client.Privmsg(to, cm.Msg)
+//			}
+		} else {
+			if strings.HasPrefix(recv, "xmpp://") {
+				fmt.Println("Jabber sys wants this!")
+				//sys.client.Privmsg(recv[7:], cm.Msg)
+			}
 		}
-	}()*/
+
+		return true
+	}
+
+	return false
 }
 
 func init() {

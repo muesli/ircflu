@@ -19,6 +19,10 @@ func (sys *WebSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 	go web.Run(sys.addr)
 }
 
+func (sys *WebSubSystem) Handle(cm msgsystem.Message) bool {
+	return false
+}
+
 func init() {
 	w := WebSubSystem{}
 
