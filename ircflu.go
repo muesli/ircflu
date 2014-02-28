@@ -16,11 +16,12 @@ import (
 	"github.com/muesli/ircflu/msgsystem"
 	_ "github.com/muesli/ircflu/msgsystem/catserver"
 	_ "github.com/muesli/ircflu/msgsystem/irc"
-//	_ "github.com/muesli/ircflu/msgsystem/jabber"
+	//	_ "github.com/muesli/ircflu/msgsystem/jabber"
 	_ "github.com/muesli/ircflu/msgsystem/web"
 	_ "github.com/muesli/ircflu/msgsystem/web/hooks"
 	_ "github.com/muesli/ircflu/msgsystem/web/hooks/github"
 	_ "github.com/muesli/ircflu/msgsystem/web/hooks/gitlab"
+	_ "github.com/muesli/ircflu/msgsystem/web/hooks/jira"
 )
 
 func main() {
