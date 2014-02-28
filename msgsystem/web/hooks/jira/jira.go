@@ -111,15 +111,11 @@ func (hook *JiraHook) Request(ctx *web.Context) {
 		return
 	}
 
-	key := data.Issue.Key
-	summary := data.Issue.Fields.Summary
-	name := data.User.DisplayName
-
 	reg, err := regexp.Compile("rest/api.*")
 	if err != nil {
 		fmt.Println(err)
 	}
-	url := reg.ReplaceAllLiteralString(data.Issue.Self, "browse/" + key)
+	url := reg.ReplaceAllLiteralString(data.Issue.Self, "browse/" + data.Issue.Key)
 	action := ""
 	event := data.WebhookEvent
 	switch {
@@ -134,7 +130,7 @@ func (hook *JiraHook) Request(ctx *web.Context) {
 	}
 
 	msg := msgsystem.Message{
-		Msg: fmt.Sprintf("[%s] %s %s %s %s", irctools.Colored(key, "lightblue"), summary, irctools.Colored(name, "teal"), action, url),
+		Msg: fmt.Sprintf("[%s] %s %s %s %s", irctools.Colored(data.Issue.Key, "lightblue"), data.Issue.Fields.Summary, irctools.Colored(data.User.DisplayName, "teal"), action, url),
 	}
 	hook.messages <- msg
 
