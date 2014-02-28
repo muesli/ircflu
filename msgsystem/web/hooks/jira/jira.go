@@ -11,6 +11,7 @@ import (
 	//"strconv"
 	"strings"
 	"regexp"
+	"io/ioutil"
 )
 
 var ()
@@ -19,6 +20,65 @@ type JiraHook struct {
 	name     string
 	path     string
 	messages chan msgsystem.Message
+}
+
+type JiraWebhook struct {
+	Id int `json:",string"`
+	Issue JiraIssue
+	User JiraUser
+	Changelog *JiraChangelog
+	Comment *JiraComment
+	WebhookEvent string
+}
+
+type JiraIssue struct {
+	Id int `json:",string"`
+	Self string
+	Key string
+	Fields JiraIssueFields
+}
+
+type JiraIssueFields struct {
+	Summary string
+	Description string
+	Labels []string
+	Priority JiraPriority
+}
+
+type JiraPriority struct {
+	Id int `json:",string"`
+	Self string
+	Name string
+}
+
+type JiraUser struct {
+	Self string
+	Name string
+	EmailAddress string
+	DisplayName string
+	Active bool
+}
+
+type JiraChangelog struct {
+	Id int `json:",string"`
+	Items []JiraChangelogItem
+}
+
+type JiraChangelogItem struct {
+	ToString string
+	To string
+	FromString string
+	From string
+	Fieldtype string
+	Field string
+}
+
+type JiraComment struct {
+	Self string
+	Id int `json:",string"`
+	Author JiraUser
+	Body string
+	UpdateAuthor JiraUser
 }
 
 func init() {
@@ -38,32 +98,32 @@ func (hook *JiraHook) SetMessageChan(channel chan msgsystem.Message) {
 }
 
 func (hook *JiraHook) Request(ctx *web.Context) {
-	decoder := json.NewDecoder(ctx.Request.Body)
-	var payload interface{}
-	err := decoder.Decode(&payload)
+	payload, err := ioutil.ReadAll(ctx.Request.Body)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 
-	data := payload.(map[string]interface{})
-	issue := data["issue"].(map[string]interface{})
-	issueFields := issue["fields"].(map[string]interface{})
-	user := data["user"].(map[string]interface{})
+	var data JiraWebhook
+	err = json.Unmarshal(payload, &data)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
 
-	key := issue["key"].(string)
-	summary := issueFields["summary"].(string)
-	name := user["displayName"].(string)
+	key := data.Issue.Key
+	summary := data.Issue.Fields.Summary
+	name := data.User.DisplayName
 
 	reg, err := regexp.Compile("rest/api.*")
 	if err != nil {
 		fmt.Println(err)
 	}
-	url := reg.ReplaceAllLiteralString(issue["self"].(string), "browse/" + key)
+	url := reg.ReplaceAllLiteralString(data.Issue.Self, "browse/" + key)
 	action := ""
-	event := data["webhookEvent"].(string)
+	event := data.WebhookEvent
 	switch {
-	case data["comment"] != nil:
+	case data.Comment != nil:
 		action = "Commented"
 	case event == "jira:issue_created":
 		action = "Created issue"
@@ -78,29 +138,26 @@ func (hook *JiraHook) Request(ctx *web.Context) {
 	}
 	hook.messages <- msg
 
-	if data["changelog"] != nil {
-		changelog := data["changelog"].(map[string]interface{})
-		changes := changelog["items"].([]interface{})
-		for _, c := range changes {
-			change := c.(map[string]interface{})
-			field := change["field"].(string)
+	if data.Changelog != nil {
+		for _, change := range data.Changelog.Items {
+			field := change.Field
 			var msg msgsystem.Message
-			if change["toString"] == nil {
-				deletedValue := change["fromString"].(string)
+			if change.ToString == "" {
 				msg = msgsystem.Message{
-					Msg: fmt.Sprintf("Deleted %s %s", irctools.Colored(field, "lightblue"), irctools.Colored(deletedValue, "teal")),
+					Msg: fmt.Sprintf("Deleted %s %s", irctools.Colored(field, "lightblue"), irctools.Colored(change.FromString, "teal")),
 				}
 			} else {
-				newStatus := change["toString"].(string)
 				switch field {
 				case "Attachment":
-					action = "Added %s %s"
+					msg = msgsystem.Message{
+						Msg: fmt.Sprintf("Added %s %s", irctools.Colored(strings.Title(field), "lightblue"), irctools.Colored(change.ToString, "teal")),
+					}
 				default:
-					action = "Changed %s to %s"
+					msg = msgsystem.Message{
+						Msg: fmt.Sprintf("Changed %s from %s to %s", irctools.Colored(strings.Title(field), "lightblue"), irctools.Colored(change.FromString, "purple"), irctools.Colored(change.ToString, "teal")),
+					}
 				}
-				msg = msgsystem.Message{
-					Msg: fmt.Sprintf(action, irctools.Colored(strings.Title(field), "lightblue"), irctools.Colored(newStatus, "teal")),
-				}
+
 			}
 			hook.messages <- msg
 		}
