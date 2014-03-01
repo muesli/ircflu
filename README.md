@@ -2,9 +2,9 @@ ircflu
 ======
 
 ircflu is an IRC bot written in Go with a flexible message- & command-handler.
-Among its advanced features are a catserver which allows you to forward incoming
-messages from a TCP socket straight to an IRC channel and an integrated HTTP
-server, ready to process incoming JSON-API calls.
+Among its advanced features are a cat-server which allows you to forward incoming
+messages from a TCP socket straight to an IRC channel, and an integrated HTTP
+server ready to process incoming JSON-API calls.
 
 At Tomahawk (http://tomahawk-player.org) we're all pretty much addicted to IRC.
 We use it not only to coordinate our development efforts and communicate, but
