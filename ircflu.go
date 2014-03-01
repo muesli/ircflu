@@ -21,7 +21,7 @@ import (
 	_ "github.com/muesli/ircflu/msgsystem/web/hooks"
 	_ "github.com/muesli/ircflu/msgsystem/web/hooks/github"
 	_ "github.com/muesli/ircflu/msgsystem/web/hooks/gitlab"
-	_ "github.com/richardpeng/ircflu/msgsystem/web/hooks/jira"
+	_ "github.com/muesli/ircflu/msgsystem/web/hooks/jira"
 )
 
 func main() {
