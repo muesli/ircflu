@@ -98,4 +98,4 @@ little summary of your changes on IRC.
 
 API docs can be found [here](http://godoc.org/github.com/muesli/ircflu).
 
-Continous integration: [![Build Status](https://secure.travis-ci.org/muesli/ircflu.png)](http://travis-ci.org/muesli/ircflu)
+Continuous integration: [![Build Status](https://secure.travis-ci.org/muesli/ircflu.png)](http://travis-ci.org/muesli/ircflu)
