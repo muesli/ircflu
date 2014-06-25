@@ -77,6 +77,10 @@ func (sys *IrcSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 	})
 	sys.client.AddHandler("PRIVMSG", func(conn *irc.Conn, line *irc.Line) {
 		channel := line.Args[0]
+		text := ""
+		if len(line.Args) > 1 {
+			text = line.Args[1]
+		}
 		if channel == sys.client.Me.Nick {
 			log.Println("PM from " + line.Src)
 			channel = line.Src // replies go via PM too.
@@ -86,7 +90,7 @@ func (sys *IrcSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 
 		msg := msgsystem.Message{
 			To:     []string{channel},
-			Msg:    line.Args[1],
+			Msg:    text,
 			Source: line.Src,
 			Authed: auth.IsAuthed(line.Src),
 		}
