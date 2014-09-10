@@ -19,13 +19,13 @@ type IrcSubSystem struct {
 	// setup IRC client:
 	client *irc.Conn
 
-	irchost     string
-	ircnick     string
+	irchost	 string
+	ircnick	 string
 	ircpassword string
-	ircssl      bool
+	ircssl	  bool
 	ircchannel  string
 
-	channels    []string
+	channels	[]string
 }
 
 func (sys *IrcSubSystem) Name() string {
@@ -67,21 +67,21 @@ func (sys *IrcSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 
 	// setup IRC client:
 	sys.client = irc.SimpleClient(sys.ircnick, "ircflu", "ircflu")
-	sys.client.SSL = sys.ircssl
+	sys.client.Config().SSL = sys.ircssl
 
-	sys.client.AddHandler(irc.CONNECTED, func(conn *irc.Conn, line *irc.Line) {
-		sys.ConnectedState <- true
-	})
-	sys.client.AddHandler(irc.DISCONNECTED, func(conn *irc.Conn, line *irc.Line) {
-		sys.ConnectedState <- false
-	})
-	sys.client.AddHandler("PRIVMSG", func(conn *irc.Conn, line *irc.Line) {
+	sys.client.HandleFunc("connected",
+		func(conn *irc.Conn, line *irc.Line) { sys.ConnectedState <- true })
+
+	sys.client.HandleFunc("disconnected",
+		func(conn *irc.Conn, line *irc.Line) { sys.ConnectedState <- false })
+
+	sys.client.HandleFunc("PRIVMSG", func(conn *irc.Conn, line *irc.Line) {
 		channel := line.Args[0]
 		text := ""
 		if len(line.Args) > 1 {
 			text = line.Args[1]
 		}
-		if channel == sys.client.Me.Nick {
+		if channel == sys.ircnick {
 			log.Println("PM from " + line.Src)
 			channel = line.Src // replies go via PM too.
 		} else {
@@ -89,8 +89,8 @@ func (sys *IrcSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 		}
 
 		msg := msgsystem.Message{
-			To:     []string{channel},
-			Msg:    text,
+			To:	 []string{channel},
+			Msg:	text,
 			Source: line.Src,
 			Authed: auth.IsAuthed(line.Src),
 		}
@@ -101,7 +101,9 @@ func (sys *IrcSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 	go func() {
 		for {
 			log.Println("Connecting to IRC:", sys.irchost)
-			err := sys.client.Connect(sys.irchost, sys.ircpassword)
+			sys.client.Config().Server = sys.irchost
+			sys.client.Config().Pass = sys.ircpassword
+			err := sys.client.Connect()
 			if err != nil {
 				log.Println("Failed to connect to IRC:", sys.irchost)
 				log.Println(err)
