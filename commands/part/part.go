@@ -3,9 +3,9 @@ package partCmd
 
 import (
 	"fmt"
-	"github.com/muesli/ircflu/commands"
-	"github.com/muesli/ircflu/msgsystem"
-	"github.com/muesli/ircflu/msgsystem/irc"
+	"github.com/pepl/ircflu/commands"
+	"github.com/pepl/ircflu/msgsystem"
+	"github.com/pepl/ircflu/msgsystem/irc"
 	_ "log"
 	"strings"
 )

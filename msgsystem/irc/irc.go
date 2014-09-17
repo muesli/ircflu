@@ -4,9 +4,9 @@ package irc
 import (
 	_ "fmt"
 	irc "github.com/fluffle/goirc/client"
-	"github.com/muesli/ircflu/app"
-	"github.com/muesli/ircflu/auth"
-	"github.com/muesli/ircflu/msgsystem"
+	"github.com/pepl/ircflu/app"
+	"github.com/pepl/ircflu/auth"
+	"github.com/pepl/ircflu/msgsystem"
 	"log"
 	"strings"
 	"time"

@@ -3,9 +3,9 @@ package execCmd
 
 import (
 	"fmt"
-	"github.com/muesli/ircflu/commands"
-	"github.com/muesli/ircflu/msgsystem"
-	"github.com/muesli/ircflu/msgsystem/irc/irctools"
+	"github.com/pepl/ircflu/commands"
+	"github.com/pepl/ircflu/msgsystem"
+	"github.com/pepl/ircflu/msgsystem/irc/irctools"
 	_ "log"
 	"os/exec"
 	"strings"

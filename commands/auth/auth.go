@@ -3,9 +3,9 @@ package authCmd
 
 import (
 	_ "fmt"
-	"github.com/muesli/ircflu/auth"
-	"github.com/muesli/ircflu/commands"
-	"github.com/muesli/ircflu/msgsystem"
+	"github.com/pepl/ircflu/auth"
+	"github.com/pepl/ircflu/commands"
+	"github.com/pepl/ircflu/msgsystem"
 	_ "log"
 	"strings"
 )

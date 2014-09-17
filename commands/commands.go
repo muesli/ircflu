@@ -3,8 +3,8 @@ package commands
 
 import (
 	"fmt"
-	"github.com/muesli/ircflu/app"
-	"github.com/muesli/ircflu/msgsystem"
+	"github.com/pepl/ircflu/app"
+	"github.com/pepl/ircflu/msgsystem"
 	"strings"
 )
 

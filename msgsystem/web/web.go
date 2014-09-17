@@ -3,8 +3,8 @@ package irc
 
 import (
 	"github.com/hoisie/web"
-	"github.com/muesli/ircflu/app"
-	"github.com/muesli/ircflu/msgsystem"
+	"github.com/pepl/ircflu/app"
+	"github.com/pepl/ircflu/msgsystem"
 )
 
 type WebSubSystem struct {

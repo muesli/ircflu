@@ -3,7 +3,7 @@ package auth
 
 import (
 	"fmt"
-	"github.com/muesli/ircflu/app"
+	"github.com/pepl/ircflu/app"
 )
 
 var (

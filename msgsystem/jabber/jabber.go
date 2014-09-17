@@ -4,9 +4,9 @@ package jabber
 import (
 	"fmt"
 	"github.com/mattn/go-xmpp"
-	"github.com/muesli/ircflu/app"
-	"github.com/muesli/ircflu/auth"
-	"github.com/muesli/ircflu/msgsystem"
+	"github.com/pepl/ircflu/app"
+	"github.com/pepl/ircflu/auth"
+	"github.com/pepl/ircflu/msgsystem"
 	"log"
 	"strings"
 )

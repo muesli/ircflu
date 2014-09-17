@@ -3,8 +3,8 @@ package sendCmd
 
 import (
 	_ "fmt"
-	"github.com/muesli/ircflu/commands"
-	"github.com/muesli/ircflu/msgsystem"
+	"github.com/pepl/ircflu/commands"
+	"github.com/pepl/ircflu/msgsystem"
 	_ "log"
 	"strings"
 )
