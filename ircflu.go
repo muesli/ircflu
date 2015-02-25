@@ -22,6 +22,7 @@ import (
 	_ "github.com/pepl/ircflu/msgsystem/web/hooks/github"
 	_ "github.com/pepl/ircflu/msgsystem/web/hooks/gitlab"
 	_ "github.com/pepl/ircflu/msgsystem/web/hooks/jira"
+	_ "github.com/pepl/ircflu/msgsystem/web/hooks/fisheye"
 )
 
 func main() {
