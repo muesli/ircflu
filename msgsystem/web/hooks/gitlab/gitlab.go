@@ -83,9 +83,15 @@ func (hook *GitLabHook) Request(ctx *web.Context) {
 			continue
 		}
 
+		author := commit["author"]
+		authorName := ""
+		if author != nil {
+			authorName = author["name"].(string)
+		}
+
 		message := commit["message"].(string)
 		ircmsg := msgsystem.Message{
-			Msg: fmt.Sprintf("%s/%s %s %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(ref, "purple"), irctools.Colored(commitId[:8], "grey"), irctools.Colored(user, "teal"), message),
+			Msg: fmt.Sprintf("%s/%s %s %s: %s", irctools.Colored(repo, "lightblue"), irctools.Colored(ref, "purple"), irctools.Colored(commitId[:8], "grey"), irctools.Colored(authorName, "teal"), message),
 		}
 		hook.messages <- ircmsg
 	}
