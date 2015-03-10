@@ -131,7 +131,9 @@ func (sys *IrcSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 
 func (sys *IrcSubSystem) Handle(cm msgsystem.Message) bool {
 	if len(cm.To) == 0 {
-		sys.client.Privmsg(sys.ircchannel, cm.Msg)
+		if sys.client != nil {
+			sys.client.Privmsg(sys.ircchannel, cm.Msg)
+		}
 		return true
 	} else {
 		for _, recv := range cm.To {

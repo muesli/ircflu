@@ -86,7 +86,8 @@ func (hook *GitLabHook) Request(ctx *web.Context) {
 		author := commit["author"]
 		authorName := ""
 		if author != nil {
-			authorName = author["name"].(string)
+			authorMap := author.(map[string]interface{})
+			authorName = authorMap["name"].(string)
 		}
 
 		message := commit["message"].(string)
