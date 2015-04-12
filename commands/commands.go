@@ -15,7 +15,7 @@ type Command interface {
 }
 
 var (
-	commands map[string]*Command = make(map[string]*Command)
+	commands        map[string]*Command = make(map[string]*Command)
 	enabledCommands map[string]*Command = make(map[string]*Command)
 
 	activateCommands string
@@ -52,7 +52,7 @@ func init() {
 
 // Commands need to call this method to register themselves
 func RegisterCommand(command Command) {
-//	fmt.Println("Registering command:", command.Name())
+	//	fmt.Println("Registering command:", command.Name())
 
 	commands[command.Name()] = &command
 }

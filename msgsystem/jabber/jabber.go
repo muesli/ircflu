@@ -14,10 +14,10 @@ import (
 type JabberSubSystem struct {
 	client *xmpp.Client
 
-	server string
+	server   string
 	username string
 	password string
-	notls bool
+	notls    bool
 }
 
 func (sys *JabberSubSystem) Name() string {
@@ -47,20 +47,20 @@ func (sys *JabberSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 				log.Fatal(err)
 			}
 			switch v := chat.(type) {
-				case xmpp.Chat:
-					if len(v.Text) > 0 {
-						fmt.Println(v.Remote, v.Text)
+			case xmpp.Chat:
+				if len(v.Text) > 0 {
+					fmt.Println(v.Remote, v.Text)
 
-						msg := msgsystem.Message{
-	//						To:     []string{sys.username},
-							Msg:    v.Text,
-							Source: v.Remote,
-							Authed: auth.IsAuthed(v.Remote),
-						}
-						channelIn <- msg
+					msg := msgsystem.Message{
+						//						To:     []string{sys.username},
+						Msg:    v.Text,
+						Source: v.Remote,
+						Authed: auth.IsAuthed(v.Remote),
 					}
-				case xmpp.Presence:
-					fmt.Println(v.From, v.Show)
+					channelIn <- msg
+				}
+			case xmpp.Presence:
+				fmt.Println(v.From, v.Show)
 			}
 		}
 	}()
@@ -70,9 +70,9 @@ func (sys *JabberSubSystem) Handle(cm msgsystem.Message) bool {
 	for _, recv := range cm.To {
 		if recv == "*" {
 			// special: send to all joined channels
-//			for _, to := range sys.channels {
-				//sys.client.Privmsg(to, cm.Msg)
-//			}
+			//			for _, to := range sys.channels {
+			//sys.client.Privmsg(to, cm.Msg)
+			//			}
 		} else {
 			if strings.HasPrefix(recv, "xmpp://") {
 				fmt.Println("Jabber sys wants this!")

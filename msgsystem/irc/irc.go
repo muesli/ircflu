@@ -25,7 +25,7 @@ type IrcSubSystem struct {
 	ircssl      bool
 	ircchannel  string
 
-	channels    []string
+	channels []string
 }
 
 func (sys *IrcSubSystem) Name() string {

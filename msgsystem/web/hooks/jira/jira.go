@@ -9,9 +9,9 @@ import (
 	"github.com/muesli/ircflu/msgsystem/irc/irctools"
 	"github.com/muesli/ircflu/msgsystem/web/hooks"
 	//"strconv"
-	"strings"
-	"regexp"
 	"io/ioutil"
+	"regexp"
+	"strings"
 )
 
 var ()
@@ -23,61 +23,61 @@ type JiraHook struct {
 }
 
 type JiraWebhook struct {
-	Id int `json:",string"`
-	Issue JiraIssue
-	User JiraUser
-	Changelog *JiraChangelog
-	Comment *JiraComment
+	Id           int `json:",string"`
+	Issue        JiraIssue
+	User         JiraUser
+	Changelog    *JiraChangelog
+	Comment      *JiraComment
 	WebhookEvent string
 }
 
 type JiraIssue struct {
-	Id int `json:",string"`
-	Self string
-	Key string
+	Id     int `json:",string"`
+	Self   string
+	Key    string
 	Fields JiraIssueFields
 }
 
 type JiraIssueFields struct {
-	Summary string
+	Summary     string
 	Description string
-	Labels []string
-	Priority JiraPriority
+	Labels      []string
+	Priority    JiraPriority
 }
 
 type JiraPriority struct {
-	Id int `json:",string"`
+	Id   int `json:",string"`
 	Self string
 	Name string
 }
 
 type JiraUser struct {
-	Self string
-	Name string
+	Self         string
+	Name         string
 	EmailAddress string
-	DisplayName string
-	Active bool
+	DisplayName  string
+	Active       bool
 }
 
 type JiraChangelog struct {
-	Id int `json:",string"`
+	Id    int `json:",string"`
 	Items []JiraChangelogItem
 }
 
 type JiraChangelogItem struct {
-	ToString string
-	To string
+	ToString   string
+	To         string
 	FromString string
-	From string
-	Fieldtype string
-	Field string
+	From       string
+	Fieldtype  string
+	Field      string
 }
 
 type JiraComment struct {
-	Self string
-	Id int `json:",string"`
-	Author JiraUser
-	Body string
+	Self         string
+	Id           int `json:",string"`
+	Author       JiraUser
+	Body         string
 	UpdateAuthor JiraUser
 }
 
@@ -115,7 +115,7 @@ func (hook *JiraHook) Request(ctx *web.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	url := reg.ReplaceAllLiteralString(data.Issue.Self, "browse/" + data.Issue.Key)
+	url := reg.ReplaceAllLiteralString(data.Issue.Self, "browse/"+data.Issue.Key)
 	action := ""
 	event := data.WebhookEvent
 	switch {
