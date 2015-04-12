@@ -66,22 +66,26 @@ func (sys *IrcSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 	sys.ConnectedState = make(chan bool)
 
 	// setup IRC client:
-	sys.client = irc.SimpleClient(sys.ircnick, "ircflu", "ircflu")
-	sys.client.SSL = sys.ircssl
+	cfg := irc.NewConfig(sys.ircnick, "ircflu", "ircflu")
+	cfg.SSL = sys.ircssl
+	cfg.Server = sys.irchost
+	cfg.Pass = sys.ircpassword
+	cfg.NewNick = func(n string) string { return n + "_" }
+	sys.client = irc.Client(cfg)
 
-	sys.client.AddHandler(irc.CONNECTED, func(conn *irc.Conn, line *irc.Line) {
+	sys.client.HandleFunc("connected", func(conn *irc.Conn, line *irc.Line) {
 		sys.ConnectedState <- true
 	})
-	sys.client.AddHandler(irc.DISCONNECTED, func(conn *irc.Conn, line *irc.Line) {
+	sys.client.HandleFunc("disconnected", func(conn *irc.Conn, line *irc.Line) {
 		sys.ConnectedState <- false
 	})
-	sys.client.AddHandler("PRIVMSG", func(conn *irc.Conn, line *irc.Line) {
+	sys.client.HandleFunc("PRIVMSG", func(conn *irc.Conn, line *irc.Line) {
 		channel := line.Args[0]
 		text := ""
 		if len(line.Args) > 1 {
 			text = line.Args[1]
 		}
-		if channel == sys.client.Me.Nick {
+		if channel == sys.client.Config().Me.Nick {
 			log.Println("PM from " + line.Src)
 			channel = line.Src // replies go via PM too.
 		} else {
@@ -101,7 +105,7 @@ func (sys *IrcSubSystem) Run(channelIn, channelOut chan msgsystem.Message) {
 	go func() {
 		for {
 			log.Println("Connecting to IRC:", sys.irchost)
-			err := sys.client.Connect(sys.irchost, sys.ircpassword)
+			err := sys.client.Connect()
 			if err != nil {
 				log.Println("Failed to connect to IRC:", sys.irchost)
 				log.Println(err)
